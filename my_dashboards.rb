@@ -3,6 +3,8 @@ require './dasht.rb'
 tail "/tmp/test1.log"
 tail "/tmp/test2.log"
 
-count "lines", /.*/
+# dashboard :test do
+#   count "lines", /.*/
+# end
 
-run collector
+dasht
