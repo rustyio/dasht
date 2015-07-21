@@ -9,14 +9,18 @@ count :bytes, /.*/ do |match|
   match[0].length
 end
 
-dashboard :test do
-  two_value :caption    => "Number of lines.",
-            :metric     => [:lines, 60, 1],
-            :subcaption => "Number of bytes.",
-            :submetric  => [:bytes, 60, 1]
+dashboard :test do |d|
+  d.value :caption => "Number of lines.",
+          :metric => [:lines, 60, 1]
+  print d.to_html
 
-  line_chart :caption => "Lines per minute.",
-             :metric  => [:lines, 60, 1]
+  # two_value :caption    => "Number of lines.",
+  #           :metric     => [:lines, 60, 1],
+  #           :subcaption => "Number of bytes.",
+  #           :submetric  => [:bytes, 60, 1]
+
+  # line_chart :caption => "Lines per minute.",
+  #            :metric  => [:lines, 60, 1]
 end
 
 dasht

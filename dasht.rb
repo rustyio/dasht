@@ -1,5 +1,6 @@
 require 'rack'
 require 'thread'
+require 'erb'
 
 class Array
   def sum; self.inject(:+); end
@@ -231,6 +232,29 @@ class Dasht
   end
 
 
+  class Dashboard
+    attr_accessor :name
+    attr_accessor :tiles
+
+    def initialize(name)
+      @name = name
+      @tiles = []
+
+      # Load the erb.
+      path = File.join(File.dirname(__FILE__), "dasht", "dashboard.erb")
+      @erb = ERB.new(IO.read(path))
+    end
+
+    def method_missing(method, *args, &block)
+      @tiles << [method, *args]
+    end
+
+    def to_html
+      @erb.result
+    end
+  end
+
+
   class Base
     attr_accessor :collector
     attr_accessor :rack_app
@@ -252,10 +276,9 @@ class Dasht
     end
 
     def add_dashboard(name, &block)
-      @dashboard_builder = []
-      yield
-      @dashboards << [name, @dashboard_builder]
-      @dashboard_builder = nil
+      dashboard = Dashboard.new(name)
+      yield(dashboard)
+      @dashboards << dashboard
     end
 
     def run(port)
