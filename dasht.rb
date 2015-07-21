@@ -32,32 +32,32 @@ class Dasht
       @line_queue.push(line)
     end
 
-    def add_event_definition(label, regex, op, value, block)
-      @event_definitions << [label, regex, op, value, block]
+    def add_event_definition(metric, regex, op, value, block)
+      @event_definitions << [metric, regex, op, value, block]
     end
 
     def reset_event_definitions
       @event_definitions = []
     end
 
-    def set(label, value, op = :last)
+    def set(metric, value, op = :last)
       secs = Time.now.to_i
-      @metric_operations[label] = op
-      @metric_values[label] ||= {}
-      @metric_values[label][secs] =
-        if @metric_values[label][secs].nil?
+      @metric_operations[metric] = op
+      @metric_values[metric] ||= {}
+      @metric_values[metric][secs] =
+        if @metric_values[metric][secs].nil?
           value
         else
-          [@values[label][secs], value].send(op)
+          [@values[metric][secs], value].send(op)
         end
     end
 
-    def get(label, resolution = 60)
-      return 0 if @metric_values[label].nil?
+    def get(metric, resolution = 60)
+      return 0 if @metric_values[metric].nil?
       secs = Time.now.to_i
       values = ((secs - resolution)..secs).map do |n|
-        @values[label][n]
-      end.compact.flatten.send(@metric_operations[label])
+        @values[metric][n]
+      end.compact.flatten.send(@metric_operations[metric])
     end
 
     def run
@@ -74,16 +74,16 @@ class Dasht
     private
 
     def _consume_line(line)
-      @event_definitions.each do |label, regex, op, value, block|
+      @event_definitions.each do |metric, regex, op, value, block|
         begin
           regex.match(line) do |matches|
             if value.nil? && block
               value = block.call(matches)
             end
-            set(label, value, op) if value
+            set(metric, value, op) if value
           end
         rescue => e
-          log "Error processing label #{label}"
+          log "Error processing metric #{metric}"
           log "  Regex: #{regex}"
           log "  Line: #{line}"
           log e
@@ -126,31 +126,50 @@ class Dasht
   end
 
   module DSL
-    def set(label, value, op = :last)
-      Dasht.instance.collector.set(label, value, op)
+    def set(metric, value, op = :last)
+      Dasht.instance.collector.set(metric, value, op)
     end
 
-    def get(label, resolution = 60)
-      Dasht.instance.collector.get(label, resolution)
+    def get(metric, resolution = 60)
+      Dasht.instance.collector.get(metric, resolution)
     end
 
     ### EVENTS ###
 
-    def event(label, regex, op = nil, value = nil, &block)
-      Dasht.instance.collector..add_event_definition(label, regex, op, value, block)
+    def event(metric, regex, op = nil, value = nil, options = {}, &block)
+      Dasht.instance.collector.add_event_definition(metric, regex, op, value, block)
+      tile(metric, options)
     end
 
-    def count(label, regex)
-      event(label, regex, :sum, 1)
+    def count(metric, regex, options = {})
+      event(metric, regex, :sum, 1)
+      tile(metric, options.merge(:type => :count))
     end
 
-    def min(label, regex, &block)
-      event(label, regex, :min, nil, block)
+    def min(metric, regex, options = {}, &block)
+      event(metric, regex, :min, nil, block)
+      tile(metric, options.merge(:type => :min))
     end
 
-    def max(label, regex, &block)
-      event(label, regex, :max, nil, block)
+    def max(metric, regex, options = {}, &block)
+      event(metric, regex, :max, nil, block)
+      tile(metric, options.merge(:type => :max))
     end
+
+    ### DASHBOARDS ###
+
+    def dashboard(name, &block)
+      Dasht.instance.add_dashboard(name, &block)
+    end
+
+    def tile(metric, options)
+      if Dasht.instance.dashboard_builder
+        log "Adding tile_type #{metric}"
+        Dasht.instance.dashboard_builder << [metric, options]
+      end
+    end
+
+
 
     ### LOG THREADS ###
 
@@ -178,9 +197,9 @@ class Dasht
 
     def _call(env)
       /\/data\/(.+)\/(.*)/.match(env["REQUEST_PATH"]) do |match|
-        label = match[1]
+        metric = match[1]
         resolution = match[2]
-        data = Dasht.instance.collector.get(label, resolution.to_i) || 0
+        data = Dasht.instance.collector.get(metric, resolution.to_i) || 0
         ['200', {'Content-Type' => 'text/html'}, [data.to_s]]
       end
     end
@@ -199,7 +218,6 @@ class Dasht
     def run
       Thread.new do
         while true
-          log "Checking..."
           unless changed?
             sleep 1
             next
@@ -217,10 +235,12 @@ class Dasht
     attr_accessor :collector
     attr_accessor :rack_app
     attr_accessor :reloader
+    attr_accessor :dashboard_builder
 
     def initialize
       @dashboards    = []
       @log_threads   = {}
+      @dashboards    = []
       @last_modified = File.mtime($PROGRAM_NAME)
       @collector     = Collector.new
       @reloader      = Reloader.new
@@ -229,6 +249,13 @@ class Dasht
 
     def add_log_thread(command)
       @log_threads[command] = nil
+    end
+
+    def add_dashboard(name, &block)
+      @dashboard_builder = []
+      yield
+      @dashboards << [name, @dashboard_builder]
+      @dashboard_builder = nil
     end
 
     def run(port)
@@ -242,6 +269,9 @@ class Dasht
 
     def reload
       @collector.reset_event_definitions
+      @dashboards = []
+
+      # Start or stop loggers as appropriate.
       @old_log_threads = @log_threads
       @log_threads = {}
       eval IO.read($PROGRAM_NAME)
@@ -263,16 +293,6 @@ class Dasht
     end
   end
 end
-
-
-  # ### DASHBOARDS
-
-  # def dashboard(name, &block)
-  #   @dashboard_tiles = []
-  #   yield
-  #   @dashboards << [name, @dashboard_tiles]
-  #   @dashboard_tiles = nil
-  # end
 
 
 def dasht(port = 4000)
