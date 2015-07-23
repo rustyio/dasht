@@ -17,7 +17,7 @@ dasht do |d|
 
   # Publish some boards...
 
-  d.board :test do |b|
+  d.board do |b|
     b.value :caption => "Number of lines.",
             :metric => [:lines, 60, 1]
   end

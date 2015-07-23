@@ -1,6 +1,8 @@
 module Dasht
   class Collector
-    def initialize
+    attr_accessor :parent
+    def initialize(parent)
+      @parent            = parent
       @metric_values     = {}
       @metric_operations = {}
       @event_definitions = []
@@ -66,10 +68,10 @@ module Dasht
             set(metric, value, op) if value
           end
         rescue => e
-          dasht.log "Error processing metric #{metric}"
-          dasht.log "  Regex: #{regex}"
-          dasht.log "  Line: #{line}"
-          dasht.log "#{e}\n#{e.backtrace.join('\n')}\n"
+          parent.log "Error processing metric #{metric}"
+          parent.log "  Regex: #{regex}"
+          parent.log "  Line: #{line}"
+          parent.log "#{e}\n#{e.backtrace.join('\n')}\n"
         end
       end
     end

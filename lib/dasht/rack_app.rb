@@ -1,9 +1,9 @@
 module Dasht
   class RackApp
-    attr_accessor :dasht
+    attr_accessor :parent
 
-    def initialize(dasht)
-      @dasht = dasht
+    def initialize(parent)
+      @parent = parent
     end
 
     def run(port)
@@ -16,21 +16,28 @@ module Dasht
     end
 
     def _call(env)
-      /\/data\/(.+)\/(.*)/.match(env["REQUEST_PATH"]) do |match|
-        metric = match[1]
-        resolution = match[2]
-        data = dasht.collector.get(metric, resolution.to_i) || 0
-        return ['200', {'Content-Type' => 'text/html'}, [data.to_s]]
+      if "/" == env["REQUEST_PATH"] && parent.boards["default"]
+        return ['200', {'Content-Type' => 'text/html'}, [parent.boards["default"].to_html]]
       end
 
-      /\/boards\/(.+)/.match(env["REQUEST_PATH"]) do |match|
+      /^\/boards\/(.+)$/.match(env["REQUEST_PATH"]) do |match|
         board = match[1]
-        if dasht.boards[board]
-          return ['200', {'Content-Type' => 'text/html'}, [dasht.boards[board].to_html]]
+        if parent.boards[board]
+          return ['200', {'Content-Type' => 'text/html'}, [parent.boards[board].to_html]]
         else
           return ['404', {'Content-Type' => 'text/html'}, ["Board #{board} not found."]]
         end
       end
+
+      /^\/data\/(.+)\/(\d+)/.match(env["REQUEST_PATH"]) do |match|
+        metric = match[1]
+        resolution = match[2]
+        data = parent.collector.get(metric, resolution.to_i) || 0
+        return ['200', {'Content-Type' => 'text/html'}, [data.to_s]]
+      end
+
+
+      return ['404', {'Content-Type' => 'text/html'}, ["Path not found: #{env['REQUEST_PATH']}"]]
     end
   end
 end

@@ -1,30 +1,30 @@
 module Dasht
   class LogThread
-    attr_accessor :dasht
+    attr_accessor :parent
 
-    def initialize(dasht, command)
-      @dasht = dasht
+    def initialize(parent, command)
+      @parent = parent
       @command = command
     end
 
     def run
-      dasht.log "Starting `#{@command}`..."
+      parent.log "Starting `#{@command}`..."
       @thread = Thread.new do
         begin
           while true
             begin
               IO.popen(@command) do |process|
                 process.each do |line|
-                  dasht.collector.add_line(line)
+                  parent.collector.add_line(line)
                 end
               end
             rescue => e
-              dasht.log "Command #{@command} stopped unexpectedly: #{e}. Restarting..."
+              parent.log "Command #{@command} stopped unexpectedly: #{e}. Restarting..."
             end
             sleep 2
           end
         rescue => e
-          dasht.log e
+          parent.log e
         end
       end
     end

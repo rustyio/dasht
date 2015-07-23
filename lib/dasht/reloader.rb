@@ -1,9 +1,9 @@
 module Dasht
   class Reloader
-    attr_accessor :dasht
+    attr_accessor :parent
 
-    def initialize(dasht)
-      @dasht         = dasht
+    def initialize(parent)
+      @parent         = parent
       @last_modified = File.mtime($PROGRAM_NAME)
     end
 
@@ -19,7 +19,7 @@ module Dasht
             next
           end
           log "Reloading #{$PROGRAM_NAME}..."
-          dasht.reload
+          parent.reload
           @last_modified = File.mtime($PROGRAM_NAME)
         end
       end

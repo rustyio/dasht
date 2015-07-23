@@ -1,11 +1,11 @@
 module Dasht
   class Board
-    attr_accessor :dasht
+    attr_accessor :parent
     attr_accessor :name
     attr_accessor :tiles
 
-    def initialize(dasht, name)
-      @dasht = dasht
+    def initialize(parent, name)
+      @parent = parent
       @name  = name
       @tiles = []
 

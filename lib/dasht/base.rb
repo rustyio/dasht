@@ -10,7 +10,7 @@ module Dasht
     def initialize(port)
       @boards      = {}
       @log_threads = {}
-      @collector   = Collector.new
+      @collector   = Collector.new(self)
       @reloader    = Reloader.new(self)
       @rack_app    = RackApp.new(self)
     end
@@ -49,7 +49,7 @@ module Dasht
 
     ### DASHBOARD ###
 
-    def board(name)
+    def board(name = "default")
       name = name.to_s
       @boards[name] = Board.new(self, name).tap do |b|
         yield(b)
