@@ -1,26 +1,26 @@
-require './dasht.rb'
+require 'dasht'
+# require 'dasht/dsl'
 
-tail "/tmp/test1.log"
-tail "/tmp/test2.log"
+dasht do |d|
 
-count :lines, /.*/
+  # Tail some logs...
 
-count :bytes, /.*/ do |match|
-  match[0].length
+  d.tail "/tmp/test1.log"
+  d.tail "/tmp/test2.log"
+
+
+  # Generate some metrics...
+
+  d.count :lines, /.*/
+  d.count :bytes, /.*/ do |match|
+    match[0].length
+  end
+
+
+  # Publish some boards...
+
+  d.board :test do |b|
+    b.value :caption => "Number of lines.",
+            :metric => [:lines, 60, 1]
+  end
 end
-
-dashboard :test do |d|
-  d.value :caption => "Number of lines.",
-          :metric => [:lines, 60, 1]
-  print d.to_html
-
-  # two_value :caption    => "Number of lines.",
-  #           :metric     => [:lines, 60, 1],
-  #           :subcaption => "Number of bytes.",
-  #           :submetric  => [:bytes, 60, 1]
-
-  # line_chart :caption => "Lines per minute.",
-  #            :metric  => [:lines, 60, 1]
-end
-
-dasht
