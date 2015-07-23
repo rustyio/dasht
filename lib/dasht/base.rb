@@ -5,9 +5,10 @@ module Dasht
     attr_accessor :rack_app
     attr_accessor :reloader
     attr_accessor :dashboard_builder
+    attr_accessor :boards
 
     def initialize(port)
-      @boards      = []
+      @boards      = {}
       @log_threads = {}
       @collector   = Collector.new
       @reloader    = Reloader.new(self)
@@ -49,7 +50,8 @@ module Dasht
     ### DASHBOARD ###
 
     def board(name)
-      @boards << Board.new(self, name).tap do |b|
+      name = name.to_s
+      @boards[name] = Board.new(self, name).tap do |b|
         yield(b)
       end
     end
