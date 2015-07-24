@@ -35,10 +35,12 @@ module Dasht
     end
 
     def value(metric, options = {})
-      @tiles << options.merge({
-                                :type => :value,
-                                :metric => metric
-      })
+      @tiles << {
+        :type       => :value,
+        :metric     => metric,
+        :resolution => 60,
+        :refresh    => 1
+      }.merge(options)
     end
   end
 end
