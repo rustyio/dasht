@@ -8,18 +8,37 @@ module Dasht
       @parent = parent
       @name  = name
       @tiles = []
-
-      # Load the erb.
-      path = File.join(File.dirname(__FILE__), "..", "..", "views", "dashboard.erb")
-      @erb = ERB.new(IO.read(path))
     end
 
-    def method_missing(method, *args, &block)
-      @tiles << [method, *args]
+    def views_path
+      File.join(File.dirname(__FILE__), "..", "..", "views")
     end
 
     def to_html
-      @erb.result
+      # Load the erb.
+      path = File.join(views_path, "dashboard.erb")
+      @erb = ERB.new(IO.read(path))
+      @erb.result(_binding do |*args| _handle_yield(*args) end)
+    end
+
+    def _binding
+      binding
+    end
+
+    def _handle_yield(*args)
+      s = "<script>\n"
+      @tiles.map do |tile_options|
+        s += "add_tile(#{tile_options.to_json});\n"
+      end
+      s += "</script>\n"
+      s
+    end
+
+    def value(metric, options = {})
+      @tiles << options.merge({
+                                :type => :value,
+                                :metric => metric
+      })
     end
   end
 end

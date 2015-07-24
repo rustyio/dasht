@@ -1,6 +1,24 @@
-<html>
+<!DOCTYPE html>
+<html lang="en" class="">
+  <head>
+    <meta charset='utf-8'>
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+  </head>
   <body>
-    Test Hello
-    <%= 1 %>
+    <script id="value-template" type="x-tmpl-mustache">
+     <div class="tile">
+     <h1>{{title}}</h1>
+     <h3>{{content}}</h3>
+     </div>
+    </script>
+    <div id="container">
+    </div>
+    <script src="/assets/js/jquery-1.11.3.min.js"></script>
+    <script src="/assets/js/mustache.min.js"></script>
+    <script src="/assets/js/dasht.js"></script>
+    <%= yield %>
+    <script>
+     dasht_init();
+    </script>
   </body>
 </html>

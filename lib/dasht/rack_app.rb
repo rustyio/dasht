@@ -6,11 +6,15 @@ module Dasht
       @parent = parent
     end
 
+    def root_path
+      File.join(File.dirname(__FILE__), "..", "..")
+    end
+
     def run(port)
-      obj = self
+      context = self
       app = Rack::Builder.new do
-        use Rack::Static, :urls => ["/assets"], :root => "assets"
-        run lambda { |env| obj._call(env) }
+        use Rack::Static, :urls => ["/assets"], :root => context.root_path
+        run lambda { |env| context._call(env) }
       end
       Rack::Server.start(:app => app, :Port => port)
     end

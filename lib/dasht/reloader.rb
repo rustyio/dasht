@@ -3,7 +3,7 @@ module Dasht
     attr_accessor :parent
 
     def initialize(parent)
-      @parent         = parent
+      @parent        = parent
       @last_modified = File.mtime($PROGRAM_NAME)
     end
 
@@ -15,11 +15,11 @@ module Dasht
       Thread.new do
         while true
           unless changed?
-            sleep 1
+            sleep 0.3
             next
           end
-          log "Reloading #{$PROGRAM_NAME}..."
-          parent.reload
+          parent.log("Reloading #{$PROGRAM_NAME}...")
+          eval(IO.read($PROGRAM_NAME))
           @last_modified = File.mtime($PROGRAM_NAME)
         end
       end

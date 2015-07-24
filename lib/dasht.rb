@@ -1,6 +1,7 @@
 require 'thread'
 require 'rack'
 require 'erb'
+require 'json'
 
 require 'dasht/reloader'
 require 'dasht/board'
@@ -13,11 +14,13 @@ class Array
   def sum; self.compact.inject(:+); end
 end
 
-def dasht(port = 4000, &block)
-  if @dasht_instance.nil?
-    @dasht_instance = Dasht::Base.new(port)
-    @dasht_instance.run(&block)
-  else
-    @dasht_instance.reload(&block)
+class DashtSingleton
+  def self.run(&block)
+    @@instance ||= Dasht::Base.new
+    @@instance.run(&block)
   end
+end
+
+def dasht(&block)
+  DashtSingleton.run(&block)
 end

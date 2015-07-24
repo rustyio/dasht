@@ -7,7 +7,7 @@ module Dasht
     attr_accessor :dashboard_builder
     attr_accessor :boards
 
-    def initialize(port)
+    def initialize
       @boards      = {}
       @log_threads = {}
       @collector   = Collector.new(self)
@@ -69,6 +69,12 @@ module Dasht
     ### RUN & RELOAD ###
 
     def run(&block)
+      if @already_running
+        reload(&block)
+        return
+      end
+
+      @already_running = true
       @collector.run
       @reloader.run
 
@@ -82,9 +88,8 @@ module Dasht
     end
 
     def reload(&block)
-      log "Reloading dasht instance."
       @collector.reset_event_definitions
-      @boards = []
+      @boards = {}
       @old_log_threads = @log_threads
       @log_threads = {}
 
@@ -94,6 +99,7 @@ module Dasht
         @log_threads[command] = @old_log_threads.delete(command)
         @log_threads[command] ||= Dash::LogThread.new(command).run
       end
+
       @old_log_threads.keys.each do |command|
         _stop_log_thread(command)
       end

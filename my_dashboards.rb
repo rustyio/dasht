@@ -1,24 +1,21 @@
 require 'dasht'
-# require 'dasht/dsl'
 
 dasht do |d|
+  # Tail a log.
 
-  # Tail some logs...
+  d.tail "/tmp/test.log"
 
-  d.tail "/tmp/test1.log"
-  d.tail "/tmp/test2.log"
-
-  # Generate some metrics...
+  # Track some metrics.
 
   d.count :lines, /.*/
   d.count :bytes, /.*/ do |match|
     match[0].length
   end
 
-  # Publish some boards...
-
-  d.board do |b|
-    b.value :caption => "Number of lines.",
-            :metric => [:lines, 60, 1]
+  # Publish a board.
+   d.board do |b|
+    b.value :lines, :title => "Number of lines."
+    # b.value :bytes, :text => "Number of bytes."
+    # b.value :bytes, :text => "Number of bytes2."
   end
 end
