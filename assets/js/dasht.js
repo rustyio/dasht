@@ -14,9 +14,9 @@ function add_tile(options) {
 
 function dasht_init() {
     $("[data-metric]").each(function(index, el) {
-        var metric     = $(el).data("metric");
-        var resolution = $(el).data("resolution");
-        var refresh    = $(el).data("refresh");
+        var metric     = $(el).attr("data-metric");
+        var resolution = $(el).attr("data-resolution");
+        var refresh    = $(el).attr("data-refresh");
 
         // Schedule the timer, but only if it refreshes more quickly than an
         // existing timer.
@@ -28,12 +28,20 @@ function dasht_init() {
             dasht_schedule_timer(metric, resolution, refresh);
         }
     });
+
+
+    if ($(document).width() > 640) {
+        $('#container').masonry({
+            itemSelector: '.tile',
+            isFitWidth: true,
+            gutter: 30,
+            columnWidth: 0
+        });
+    }
 }
 
 function dasht_schedule_timer(metric, resolution, refresh) {
     var key = [metric,resolution];
-
-    console.log(["timer", metric, resolution, refresh]);
 
     // Clear the old interval.
     if (dasht_timers[key]) {
@@ -48,6 +56,7 @@ function dasht_schedule_timer(metric, resolution, refresh) {
 
 function dasht_update_metric(metric, resolution, refresh) {
     var url = "/data/" + metric + "/" + resolution;
+    var selector = '[data-metric="' + metric + '"][data-resolution="' + resolution + '"]';
     $.get(url).done(function(value) {
         // Update the UI.
         var selector = '[data-metric="' + metric + '"][data-resolution="' + resolution + '"]';
@@ -68,4 +77,10 @@ function dasht_update_metric(metric, resolution, refresh) {
 }
 
 function value_init(el, options) {
+    var metric = $(el).find(".metric");
+    $(el).on('changed', function() {
+        metric.animate({ opacity: 0.5 }, 0, function() {
+            metric.animate({ opacity: 1.0 }, 400);
+        });
+    });
 }

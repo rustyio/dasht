@@ -1,12 +1,89 @@
+@import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700);
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    background-color: #333;
+    padding: 0;
+    margin: 0;
+}
+
+/*** BACKGROUND ***/
+
+#background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(/assets/images/background.jpg) fixed center no-repeat;
+    opacity: 0.4;
+}
+
+/*** CONTAINER ***/
+
+#container-wrapper {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-content: center;
+}
+
+#container {
+    margin: auto auto;
+}
+
 .tile {
-    font-family: "Helvetica";
-    font-weight: bold;
-    font-size: 40px;
-    text-align: center;
-    background: #eee;
-    width: 200px;
-    margin: 20px;
-    padding: 30px 0px;
-    height: 120px;
     float: left;
+    margin-bottom: 20px;
+}
+
+.value-tile {
+    width: 350px;
+    height: 200px;
+    margin-bottom: 20px;
+    float: left;
+}
+
+.value-tile .title {
+    position: relative;
+    font-size: 16px;
+    text-align: left;
+    margin: auto;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: bold;
+    border-bottom: solid 9px rgba(0, 0, 0, 0.4);
+    padding-bottom: 3px;
+    letter-spacing: 0.05em;
+}
+
+.value-tile .metric {
+    font-family: 'Lato', sans-serif;
+    color: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+    text-align: center;
+    vertical-align: middle;
+    margin: auto;
+    padding: 20px;
+    font-size: 80px;
+    line-height: 40x;
+    font-weight: bold;
+}
+
+@media (max-width: 640px) {
+    #container {
+        width: 100%;
+        padding: 20px;
+        margin: 0px;
+    }
+    .value-tile {
+        display: block;
+        height: auto;
+        width: 100%;
+    }
+    .value-tile .metric {
+        font-size: 30px;
+    }
 }

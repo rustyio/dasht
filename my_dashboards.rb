@@ -13,9 +13,9 @@ dasht do |d|
   end
 
   # Publish a board.
-   d.board do |b|
-    b.value :lines, :title => "Number of lines."
-    # b.value :bytes, :text => "Number of bytes."
-    # b.value :bytes, :text => "Number of bytes2."
+  d.board do |b|
+    b.value :lines, :title => "Number of Lines"
+    b.value :bytes, :title => "Number of Bytes"
+    b.value :bytes, :title => "Number of Bytes"
   end
 end

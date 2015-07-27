@@ -27,11 +27,17 @@ module Dasht
 
     def _handle_yield(*args)
       s = "<script>\n"
-      @tiles.map do |tile_options|
-        s += "add_tile(#{tile_options.to_json});\n"
+      @tiles.map do |options|
+        s += "add_tile(#{options.to_json});\n"
       end
       s += "</script>\n"
       s
+    end
+
+    def section(options = {}, &block)
+      @tiles << {
+        :type => :section,
+      }.merge(options)
     end
 
     def value(metric, options = {})
@@ -39,7 +45,9 @@ module Dasht
         :type       => :value,
         :metric     => metric,
         :resolution => 60,
-        :refresh    => 1
+        :refresh    => 1,
+        :width      => 1,
+        :height     => 1
       }.merge(options)
     end
   end

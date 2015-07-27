@@ -1,22 +1,18 @@
 # TODO
 
-+ DONE - Serve up web assets.
-+ Load mustache template from dashboard.erb - 20 minutes
-+ Convert template to html.
-+ Inject html into page.
-+ Look for any data-metric tags.
-+ Set up intervals to trigger events.
-+ Listen for events.
-+ Update UI based on events.
++ Create a table layout in Ruby, using default layouts.
++ Position table in center of page.
++ Scale to fit.
++ Style the contents.
++ Create different types of tiles.
+  + Value
+  + Top N List
+  + Empty / Full Gauge
+  + Bar Chart / Line Chart
+  + Message Log
+  + Google Map
+  + Blinky Lights
 + Clear out old stats.
 + Resize rows and columns to fit screen.
 
-# Tile Types
-
-Value
-Top N List
-Empty / Full Gauge
-Bar Chart / Line Chart
-Message Log
-Google Map
-Blinky Lights
+# Layouts

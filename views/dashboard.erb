@@ -6,14 +6,22 @@
   </head>
   <body>
     <script id="value-template" type="x-tmpl-mustache">
-     <div class="tile">
-     <h1>{{title}}</h1>
-     <h3 data-metric="{{metric}}" data-resolution="{{resolution}}" data-refresh="{{refresh}}">{{value}}</h3>
+     <div class="tile value-tile" data-width=1 data-height=1>
+     <div class="title">{{title}}</div>
+     <div class="subtitle">{{subtitle}}</div>
+     <div class="metric" data-metric="{{metric}}" data-resolution="{{resolution}}" data-refresh="{{refresh}}">{{value}}</div>
+     <div class="date">{{date}}</div>
      </div>
     </script>
-    <div id="container">
+    <div id="background"></div>
+    <div id="container-wrapper">
+      <div id="container">
+      </div>
+      <br style="clear: both;" />
     </div>
     <script src="/assets/js/jquery-1.11.3.min.js"></script>
+    <script src="/assets/js/masonry.pkgd.min.js"></script>
+    <script src="/assets/js/underscore-min.js"></script>
     <script src="/assets/js/mustache.min.js"></script>
     <script src="/assets/js/dasht.js"></script>
     <%= yield %>
