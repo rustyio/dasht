@@ -5,6 +5,8 @@ require 'json'
 
 require 'dasht/reloader'
 require 'dasht/board'
+require 'dasht/list'
+require 'dasht/metric'
 require 'dasht/collector'
 require 'dasht/rack_app'
 require 'dasht/log_thread'

@@ -27,35 +27,37 @@ module Dasht
       @event_definitions = []
     end
 
-    def set(metric, value, op = :last, time = Time.now.to_i)
+    def set(metric, value, op = :last, time = Time.now)
       metric = metric.to_s
-      secs = time.to_i
       @metric_operations[metric] = op
-      @metric_values[metric] ||= {}
-      @metric_values[metric][secs] =
-        if @metric_values[metric][secs].nil?
-          value
-        else
-          [@metric_values[metric][secs], value].send(op)
-        end
+      m = (@metric_values[metric] ||= Metric.new)
+      m.append(value, time) do |old_value, new_value|
+        old_value.nil? ? new_value : [old_value, new_value].send(op)
+      end
     end
 
     def get(metric, resolution = 60, time = Time.now)
       metric = metric.to_s
-      return 0 if @metric_values[metric].nil?
-      secs = time.to_i
-      values = ((secs - resolution)..secs).map do |n|
-        @metric_values[metric][n]
-      end.compact.flatten.send(@metric_operations[metric])
+      m = @metric_values[metric]
+      return 0 if m.nil?
+      op = @metric_operations[metric]
+      m.enum(time.to_i - resolution).to_a.flatten.send(op)
     end
 
     def run
       Thread.new do
-        while line = @line_queue.pop
-          @total_lines += 1
-          @total_bytes += line.length
-          print "\rConsumed #{@total_lines} lines (#{@total_bytes} bytes)..."
-          _consume_line(line)
+        begin
+          while line = @line_queue.pop
+            @total_lines += 1
+            @total_bytes += line.length
+            print "\rConsumed #{@total_lines} lines (#{@total_bytes} bytes)..."
+            _consume_line(line)
+          end
+        rescue => e
+          parent.log "Error processing metric #{metric}"
+          parent.log "  Regex: #{regex}"
+          parent.log "  Line: #{line}"
+          parent.log "#{e}\n#{e.backtrace.join('\n')}\n"
         end
       end
     end

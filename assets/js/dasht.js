@@ -96,7 +96,7 @@ function dasht_update_metric(metric, resolution, refresh) {
 
         // Schedule the new timer.
         if (refresh) {
-            // dasht_schedule_timer(metric, resolution, refresh);
+            dasht_schedule_timer(metric, resolution, refresh);
         }
     });
 }
