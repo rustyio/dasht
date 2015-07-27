@@ -6,7 +6,7 @@
 + Style the contents.
 + Create different types of tiles.
   + DONE - Value
-  + Empty / Full Gauge
+  + DONE - Empty / Full Gauge
   + Bar Chart / Line Chart
   + Top N List
   + Message Log

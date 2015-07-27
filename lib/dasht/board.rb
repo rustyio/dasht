@@ -46,8 +46,8 @@ module Dasht
         :metric     => metric,
         :resolution => 60,
         :refresh    => 1,
-        :width      => 1,
-        :height     => 1
+        :min        => 0,
+        :max        => 0
       }.merge(options)
     end
   end
