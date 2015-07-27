@@ -4,7 +4,7 @@
 body {
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
-    background-color: #333;
+    background-color: #345;
     padding: 0;
     margin: 0;
 }
@@ -17,7 +17,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url(/assets/images/background.jpg) fixed center no-repeat;
+    /* background: url(/assets/images/background.jpg) fixed center no-repeat; */
     opacity: 0.4;
 }
 
@@ -42,7 +42,6 @@ body {
 
 .value-tile {
     width: 350px;
-    height: 200px;
     margin-bottom: 20px;
     float: left;
 }
@@ -68,7 +67,7 @@ body {
     margin: auto;
     padding: 20px;
     font-size: 80px;
-    line-height: 40x;
+    line-height: 80x;
     font-weight: bold;
 }
 

@@ -5,13 +5,12 @@
 + Scale to fit.
 + Style the contents.
 + Create different types of tiles.
-  + Value
-  + Top N List
+  + DONE - Value
   + Empty / Full Gauge
   + Bar Chart / Line Chart
+  + Top N List
   + Message Log
   + Google Map
-  + Blinky Lights
 + Clear out old stats.
 + Resize rows and columns to fit screen.
 

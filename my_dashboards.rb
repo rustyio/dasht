@@ -17,5 +17,6 @@ dasht do |d|
     b.value :lines, :title => "Number of Lines"
     b.value :bytes, :title => "Number of Bytes"
     b.value :bytes, :title => "Number of Bytes"
+    b.value :bytes, :title => "Number of Bytes"
   end
 end
