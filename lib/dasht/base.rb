@@ -47,6 +47,10 @@ module Dasht
       event(metric, regex, :max, nil, block)
     end
 
+    def top(metric, regex, options = {}, &block)
+      event(metric, regex, :top, nil, block)
+    end
+
     ### DASHBOARD ###
 
     def board(name = "default")
@@ -93,7 +97,14 @@ module Dasht
       @old_log_threads = @log_threads
       @log_threads = {}
 
-      block.call(self)
+      begin
+        block.call(self)
+      rescue => e
+        log "Error processing metric #{metric}"
+        log "  Regex: #{regex}"
+        log "  Line: #{line}"
+        log "#{e}\n#{e.backtrace.join('\n')}\n"
+      end
 
       @log_threads.keys.each do |command|
         @log_threads[command] = @old_log_threads.delete(command)

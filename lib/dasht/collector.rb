@@ -1,3 +1,7 @@
+class Array
+  def sum; self.compact.inject(:+); end
+end
+
 module Dasht
   class Collector
     attr_accessor :parent
@@ -23,9 +27,9 @@ module Dasht
       @event_definitions = []
     end
 
-    def set(metric, value, op = :last)
+    def set(metric, value, op = :last, time = Time.now.to_i)
       metric = metric.to_s
-      secs = Time.now.to_i
+      secs = time.to_i
       @metric_operations[metric] = op
       @metric_values[metric] ||= {}
       @metric_values[metric][secs] =
@@ -36,10 +40,10 @@ module Dasht
         end
     end
 
-    def get(metric, resolution = 60)
+    def get(metric, resolution = 60, time = Time.now)
       metric = metric.to_s
       return 0 if @metric_values[metric].nil?
-      secs = Time.now.to_i
+      secs = time.to_i
       values = ((secs - resolution)..secs).map do |n|
         @metric_values[metric][n]
       end.compact.flatten.send(@metric_operations[metric])

@@ -38,10 +38,10 @@ body {
 .tile {
     float: left;
     margin-bottom: 20px;
+    width: 300px;
 }
 
 .value-tile {
-    width: 350px;
     margin-bottom: 20px;
     float: left;
 }
@@ -80,6 +80,16 @@ body {
     background-color: rgba(0, 0, 0, 0.4);
     height: 8px;
     width: 100%;
+}
+
+.graph {
+    margin-top: 40px;
+    position: fixed;
+}
+
+.rickshaw_graph svg {
+    z-index: -1;
+    opacity: 0.1;
 }
 
 @media (max-width: 640px) {

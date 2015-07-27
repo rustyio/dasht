@@ -34,20 +34,17 @@ module Dasht
       s
     end
 
-    def section(options = {}, &block)
+    def method_missing(method, *args, &block)
+      metric = args.shift
+      options = args.pop
       @tiles << {
-        :type => :section,
-      }.merge(options)
-    end
-
-    def value(metric, options = {})
-      @tiles << {
-        :type       => :value,
+        :type       => method,
         :metric     => metric,
         :resolution => 60,
         :refresh    => 1,
-        :min        => 0,
-        :max        => 0
+        :width      => 1,
+        :height     => 1,
+        :extra_args => args
       }.merge(options)
     end
   end

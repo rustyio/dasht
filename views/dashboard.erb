@@ -2,20 +2,33 @@
 <html lang="en" class="">
   <head>
     <meta charset='utf-8'>
+    <link rel="stylesheet" type="text/css" href="/assets/css/chartist.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
   </head>
   <body>
+
     <script id="value-template" type="x-tmpl-mustache">
      <div class="tile value-tile" data-width=1 data-height=1>
+     <div class="graph"></div>
      <div class="title">{{title}}</div>
      <div class="progress"><div></div></div>
-     <div class="subtitle">{{subtitle}}</div>
      <div class="metric" data-metric="{{metric}}" data-resolution="{{resolution}}" data-refresh="{{refresh}}">
      &nbsp;
      </div>
-     <div class="date">{{date}}</div>
      </div>
     </script>
+
+    <script id="top-template" type="x-tmpl-mustache">
+     <div class="tile top-tile" data-width=1 data-height=1>
+     <div class="graph"></div>
+     <div class="title">{{title}}</div>
+     <div class="progress"><div></div></div>
+     <div class="metric" data-metric="{{metric}}" data-resolution="{{resolution}}" data-refresh="{{refresh}}">
+     &nbsp;
+     </div>
+     </div>
+    </script>
+
     <div id="background"></div>
     <div id="container-wrapper">
       <div id="container">
@@ -25,6 +38,8 @@
     <script src="/assets/js/masonry.pkgd.min.js"></script>
     <script src="/assets/js/underscore-min.js"></script>
     <script src="/assets/js/mustache.min.js"></script>
+    <script src="/assets/js/d3.v3.js"></script>
+    <script src="/assets/js/rickshaw.min.js"></script>
     <script src="/assets/js/dasht.js"></script>
     <%= yield %>
     <script>

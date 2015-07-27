@@ -2,11 +2,17 @@ var dasht_timers = {};
 
 function add_tile(options) {
     // Generate the html.
-    var html = $("#" + options.type + "-template").html();
+    var template_key = "#" + options.type + "-template";
+    var html = $(template_key).html();
+    if (html == undefined) {
+        alert("Template not found: " + template_key);
+    }
     var el = $.parseHTML($.trim(Mustache.render(html, options)))[0];
 
     // Initialize the element.
-    window[options.type + "_init"](el, options);
+    if (window[options.type + "_init"] != undefined) {
+        window[options.type + "_init"](el, options);
+    }
 
     // Update the page.
     $("#container").append(el);
@@ -38,6 +44,25 @@ function dasht_init() {
             columnWidth: 0
         });
     }
+
+    $(".graph").width($(".tile").width());
+    $(".graph").height($(".tile").height() - 40);
+
+    var graph = new Rickshaw.Graph( {
+        element: document.querySelector(".graph"),
+        series: [{
+            color: '#000000',
+            min: 0,
+            max: 1000,
+            data: [
+                { x: 0, y: 40 },
+                { x: 1, y: 49 },
+                { x: 2, y: 38 },
+                { x: 3, y: 30 },
+                { x: 4, y: 32 } ]
+        }]
+    });
+    graph.render();
 }
 
 function dasht_schedule_timer(metric, resolution, refresh) {
@@ -71,7 +96,7 @@ function dasht_update_metric(metric, resolution, refresh) {
 
         // Schedule the new timer.
         if (refresh) {
-            dasht_schedule_timer(metric, resolution, refresh);
+            // dasht_schedule_timer(metric, resolution, refresh);
         }
     });
 }

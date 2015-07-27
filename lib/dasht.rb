@@ -10,10 +10,6 @@ require 'dasht/rack_app'
 require 'dasht/log_thread'
 require 'dasht/base'
 
-class Array
-  def sum; self.compact.inject(:+); end
-end
-
 class DashtSingleton
   def self.run(&block)
     @@instance ||= Dasht::Base.new

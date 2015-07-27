@@ -12,11 +12,15 @@ dasht do |d|
     match[0].length
   end
 
+  d.event :line_lengths, /.*/ do |match|
+    match[0].length
+  end
+
   # Publish a board.
   d.board do |b|
     b.value :lines, :title => "Number of Lines"
     b.value :bytes, :title => "Number of Bytes"
     b.value :bytes, :title => "Number of Bytes"
-    b.value :bytes, :title => "Number of Bytes", :min => 0, :max => 200
+    b.top   :bytes, :title => "Top Lengths", :n => 5
   end
 end
