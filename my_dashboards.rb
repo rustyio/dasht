@@ -7,15 +7,15 @@ dasht do |d|
 
   # Track some metrics.
 
-  d.count :lines, /.*/
+  # d.count :lines, /.+/
 
-  d.count :bytes, /.*/ do |match|
-    match[0].length
-  end
-
-  # d.event :line_lengths, /.*/ do |match|
+  # d.count :bytes, /.+/ do |match|
   #   match[0].length
   # end
+
+  d.append :test, /.+/ do |match|
+    match[0]
+  end
 
   # Publish a board.
   d.board do |b|

@@ -32,23 +32,23 @@ module Dasht
     ### EVENTS ###
 
     def event(metric, regex, op = nil, value = nil, options = {}, &block)
-      collector.add_event_definition(metric, regex, op, value, block)
+      collector.add_event_definition(metric.to_s, regex, op, value, block)
     end
 
-    def count(metric, regex, options = {}, &block)
+    def count(metric, regex, &block)
       event(metric, regex, :sum, 1, &block)
     end
 
-    def min(metric, regex, options = {}, &block)
-      event(metric, regex, :min, nil, block)
+    def min(metric, regex, &block)
+      event(metric, regex, :min, nil, &block)
     end
 
-    def max(metric, regex, options = {}, &block)
-      event(metric, regex, :max, nil, block)
+    def max(metric, regex, &block)
+      event(metric, regex, :max, nil, &block)
     end
 
-    def top(metric, regex, options = {}, &block)
-      event(metric, regex, :top, nil, block)
+    def append(metric, regex, &block)
+      event(metric, regex, :flatten, nil, &block)
     end
 
     ### DASHBOARD ###

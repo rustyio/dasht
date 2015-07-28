@@ -14,7 +14,16 @@ module Dasht
       context = self
       app = Rack::Builder.new do
         use Rack::Static, :urls => ["/assets"], :root => context.root_path
-        run lambda { |env| context._call(env) }
+        run lambda { |env|
+          begin
+            context._call(env)
+          rescue => e
+            parent.log "Error processing metric #{metric}"
+            parent.log "  Regex: #{regex}"
+            parent.log "  Line: #{line}"
+            parent.log "#{e}\n#{e.backtrace.join('\n')}\n"
+          end
+        }
       end
       Rack::Server.start(:app => app, :Port => port)
     end
@@ -39,7 +48,6 @@ module Dasht
         data = parent.collector.get(metric, resolution.to_i) || 0
         return ['200', {'Content-Type' => 'text/html'}, [data.to_s]]
       end
-
 
       return ['404', {'Content-Type' => 'text/html'}, ["Path not found: #{env['REQUEST_PATH']}"]]
     end
