@@ -33,16 +33,12 @@ module Dasht
       m.append(value, time) do |old_value, new_value|
         old_value.nil? ? new_value : [old_value, new_value].send(op)
       end
-      print "#{metric} - #{m.to_s}\n"
     end
 
     def get(metric, resolution = 60, time = Time.now)
       m = @metric_values[metric]
       return 0 if m.nil?
       op = @metric_operations[metric]
-      print "Metric: #{metric}\n"
-      print "Operation: #{op}\n"
-      print "Data: #{m.enum(time.to_i - resolution).to_a}\n"
       m.enum(time.to_i - resolution).to_a.flatten.send(op)
     end
 
@@ -56,10 +52,8 @@ module Dasht
             _consume_line(line)
           end
         rescue => e
-          parent.log "Error processing metric #{metric}"
-          parent.log "  Regex: #{regex}"
-          parent.log "  Line: #{line}"
-          parent.log "#{e}\n#{e.backtrace.join('\n')}\n"
+          parent.log e
+          raise e
         end
       end
     end
@@ -73,14 +67,11 @@ module Dasht
             if block
               value = block.call(matches)
             end
-            print "Setting #{metric} - #{value} - #{op}\n"
             set(metric, value, op) if value
           end
         rescue => e
-          parent.log "Error processing metric #{metric}"
-          parent.log "  Regex: #{regex}"
-          parent.log "  Line: #{line}"
-          parent.log "#{e}\n#{e.backtrace.join('\n')}\n"
+          parent.log e
+          raise e
         end
       end
     end

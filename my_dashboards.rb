@@ -7,11 +7,11 @@ dasht do |d|
 
   # Track some metrics.
 
-  # d.count :lines, /.+/
+  d.count :lines, /.+/
 
-  # d.count :bytes, /.+/ do |match|
-  #   match[0].length
-  # end
+  d.count :bytes, /.+/ do |match|
+    match[0].length
+  end
 
   d.append :test, /.+/ do |match|
     match[0]
@@ -22,6 +22,5 @@ dasht do |d|
     b.value :lines, :title => "Number of Lines", :resolution => 10
     b.value :bytes, :title => "Number of Bytes", :resolution => 10
     b.value :bytes, :title => "Number of Bytes", :resolution => 10
-    # b.top   :bytes, :title => "Top Lengths", :n => 5
   end
 end

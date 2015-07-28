@@ -19,12 +19,13 @@ module Dasht
                 end
               end
             rescue => e
-              parent.log "Command #{@command} stopped unexpectedly: #{e}. Restarting..."
+              parent.log e
             end
             sleep 2
           end
         rescue => e
           parent.log e
+          raise e
         end
       end
     end

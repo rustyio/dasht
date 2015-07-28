@@ -100,10 +100,8 @@ module Dasht
       begin
         block.call(self)
       rescue => e
-        log "Error processing metric #{metric}"
-        log "  Regex: #{regex}"
-        log "  Line: #{line}"
-        log "#{e}\n#{e.backtrace.join('\n')}\n"
+        log e
+        raise e
       end
 
       @log_threads.keys.each do |command|

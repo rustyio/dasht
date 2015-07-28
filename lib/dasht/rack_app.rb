@@ -18,10 +18,8 @@ module Dasht
           begin
             context._call(env)
           rescue => e
-            parent.log "Error processing metric #{metric}"
-            parent.log "  Regex: #{regex}"
-            parent.log "  Line: #{line}"
-            parent.log "#{e}\n#{e.backtrace.join('\n')}\n"
+            context.parent.log e
+            raise e
           end
         }
       end
