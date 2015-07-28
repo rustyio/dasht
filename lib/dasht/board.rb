@@ -14,8 +14,12 @@ module Dasht
       File.join(File.dirname(__FILE__), "..", "..", "views")
     end
 
-    def plugins_path
+    def system_plugins_path
       File.join(File.dirname(__FILE__), "..", "..", "plugins")
+    end
+
+    def user_plugins_path
+      File.join(File.dirname($PROGRAM_NAME), "plugins")
     end
 
     def to_html
@@ -24,6 +28,34 @@ module Dasht
       @erb = ERB.new(IO.read(path))
       @erb.result(_binding do |*args| _handle_yield(*args) end)
     end
+
+    def load_system_plugins
+      _load_plugins(system_plugins_path)
+    end
+
+    def load_user_plugins
+      _load_plugins(user_plugins_path)
+    end
+
+    def method_missing(method, *args, &block)
+      begin
+        metric = args.shift
+        options = args.pop
+        @tiles << {
+          :type       => method,
+          :metric     => metric,
+          :resolution => 60,
+          :refresh    => 1,
+          :width      => 1,
+          :height     => 1,
+          :extra_args => args
+        }.merge(options)
+      rescue => e
+        super(method, *args, &block)
+      end
+    end
+
+    private
 
     def _binding
       binding
@@ -38,7 +70,7 @@ module Dasht
       s
     end
 
-    def load_system_plugins
+    def _load_plugins(plugins_path)
       s = ""
       Dir[File.join(plugins_path, "*.html")].each do |path|
         name = File.basename(path).gsub(".html", "")
@@ -53,20 +85,6 @@ module Dasht
         s += "</script>\n"
       end
       s
-    end
-
-    def method_missing(method, *args, &block)
-      metric = args.shift
-      options = args.pop
-      @tiles << {
-        :type       => method,
-        :metric     => metric,
-        :resolution => 60,
-        :refresh    => 1,
-        :width      => 1,
-        :height     => 1,
-        :extra_args => args
-      }.merge(options)
     end
   end
 end

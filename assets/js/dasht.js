@@ -3,7 +3,7 @@ var dasht_timers = {};
 function add_tile(options) {
     // Generate the html.
     var template_key = "#" + options.type + "-template";
-    var html = $(template_key).html();
+    var html = $(template_key).last().html();
     if (html == undefined) {
         alert("Template not found: " + template_key);
     }
