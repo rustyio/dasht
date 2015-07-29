@@ -3,6 +3,7 @@ require 'rack'
 require 'erb'
 require 'json'
 
+require 'dasht/array_monkeypatching'
 require 'dasht/reloader'
 require 'dasht/board'
 require 'dasht/list'

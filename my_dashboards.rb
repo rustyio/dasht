@@ -14,14 +14,14 @@ dasht do |d|
     match[0].length
   end
 
-  d.append :log, /.+/ do |match|
-    match[0]
+  d.append :router, /router.*method=(\w+) path="([^\"]+)"/ do |match|
+    "#{match[1]} #{match[2]}"
   end
 
   # Publish a board.
   d.board do |b|
     b.value :lines, :title => "Number of Lines", :resolution => 999
     b.value :bytes, :title => "Number of Bytes", :resolution => 999
-    b.scroll :log, :title => "The Log"
+    b.scroll :router, :title => "Router Requests"
   end
 end

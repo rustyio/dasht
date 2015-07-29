@@ -10,31 +10,26 @@ module Dasht
       @tiles = []
     end
 
-    def views_path
-      File.join(File.dirname(__FILE__), "..", "..", "views")
-    end
-
-    def system_plugins_path
-      File.join(File.dirname(__FILE__), "..", "..", "plugins")
-    end
-
-    def user_plugins_path
-      File.join(File.dirname($PROGRAM_NAME), "plugins")
-    end
-
     def to_html
       # Load the erb.
-      path = File.join(views_path, "dashboard.erb")
+      path = File.join(parent.views_path, "dashboard.erb")
       @erb = ERB.new(IO.read(path))
-      @erb.result(_binding do |*args| _handle_yield(*args) end)
+      @erb.result(binding)
     end
 
-    def load_system_plugins
-      _load_plugins(system_plugins_path)
+    def emit_plugin_css
+      _emit_css(parent.system_plugins_path) +
+        _emit_css(parent.user_plugins_path)
     end
 
-    def load_user_plugins
-      _load_plugins(user_plugins_path)
+    def emit_plugin_html
+      _emit_html(parent.system_plugins_path) +
+        _emit_html(parent.user_plugins_path)
+    end
+
+    def emit_plugin_js
+      _emit_js(parent.system_plugins_path) +
+        _emit_js(parent.user_plugins_path)
     end
 
     def method_missing(method, *args, &block)
@@ -57,11 +52,7 @@ module Dasht
 
     private
 
-    def _binding
-      binding
-    end
-
-    def _handle_yield(*args)
+    def emit_tile_js
       s = "<script>\n"
       @tiles.map do |options|
         s += "add_tile(#{options.to_json});\n"
@@ -70,16 +61,30 @@ module Dasht
       s
     end
 
-    def _load_plugins(plugins_path)
+    def _emit_css(plugin_path)
       s = ""
-      Dir[File.join(plugins_path, "*.html")].each do |path|
+      Dir[File.join(plugin_path, "*.css")].each do |path|
+        s += "<style>\n"
+        s += IO.read(path)
+        s += "</style>\n"
+      end
+      return s
+    end
+
+    def _emit_html(plugin_path)
+      s = ""
+      Dir[File.join(plugin_path, "*.html")].each do |path|
         name = File.basename(path).gsub(".html", "")
         s += "<script id='#{name}-template' type='x-tmpl-mustache'>\n"
         s += IO.read(path)
         s += "</script>\n"
       end
+      return s
+    end
 
-      Dir[File.join(plugins_path, "*.js")].each do |path|
+    def _emit_js(plugin_path)
+      s = ""
+      Dir[File.join(plugin_path, "*.js")].each do |path|
         s += "<script>\n"
         s += IO.read(path)
         s += "</script>\n"

@@ -68,7 +68,7 @@ function dasht_update_metric(metric, resolution, refresh) {
     $.get(url).done(function(value) {
         // Update the UI.
         $(selector).each(function(index, el) {
-            $(el).trigger('update', value);
+            $(el).trigger('update', [value]);
         });
 
         // Schedule the new timer.

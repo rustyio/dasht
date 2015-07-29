@@ -38,7 +38,6 @@ body {
 .tile {
     float: left;
     margin-bottom: 20px;
-    width: 300px;
 }
 
 .tile .title {
@@ -51,19 +50,14 @@ body {
     padding-bottom: 3px;
     letter-spacing: 0.05em;
     border-bottom: solid 8px rgba(0, 0, 0, 0.4);
+    text-align: left;
 }
 
 .tile .metric {
     font-family: 'Lato', sans-serif;
     color: rgba(255, 255, 255, 0.9);
-    border-radius: 3px;
-    text-align: center;
     vertical-align: middle;
     margin: auto;
-    padding: 20px;
-    font-size: 80px;
-    line-height: 80x;
-    font-weight: bold;
 }
 
 @media (max-width: 640px) {
@@ -71,15 +65,5 @@ body {
         width: 100%;
         padding: 20px;
         margin: 0px;
-    }
-
-    .value-tile {
-        display: block;
-        height: auto;
-        width: 100%;
-    }
-
-    .value-tile .metric {
-        font-size: 30px;
     }
 }

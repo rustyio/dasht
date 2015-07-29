@@ -1,0 +1,23 @@
+.value-tile {
+    width: 300px;
+}
+
+.value-tile .metric {
+    text-align: center;
+    font-size: 80px;
+    line-height: 80x;
+    font-weight: bold;
+    padding: 20px 0px;
+}
+
+@media (max-width: 640px) {
+    .value-tile {
+        display: block;
+        height: auto;
+        width: 100%;
+    }
+
+    .value-tile .metric {
+        font-size: 30px;
+    }
+}

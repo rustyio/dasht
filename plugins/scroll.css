@@ -1,0 +1,23 @@
+.scroll-tile {
+    width: 800px;
+}
+
+.scroll-tile .metric {
+    text-align: left;
+    font-size: 18px;
+    line-height: 30x;
+    padding: 20px 0px;
+}
+
+@media (max-width: 640px) {
+    .scroll-tile {
+        display: block;
+        height: auto;
+        width: 100%;
+    }
+
+    .scroll-tile .metric {
+        font-size: 12px;
+        line-height: 20px;
+    }
+}

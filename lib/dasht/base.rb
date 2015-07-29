@@ -36,7 +36,7 @@ module Dasht
     end
 
     def count(metric, regex, &block)
-      event(metric, regex, :sum, 1, &block)
+      event(metric, regex, :dasht_sum, 1, &block)
     end
 
     def min(metric, regex, &block)
@@ -48,10 +48,22 @@ module Dasht
     end
 
     def append(metric, regex, &block)
-      event(metric, regex, :flatten, nil, &block)
+      event(metric, regex, :to_a, nil, &block)
     end
 
     ### DASHBOARD ###
+
+    def views_path
+      File.join(File.dirname(__FILE__), "..", "..", "views")
+    end
+
+    def system_plugins_path
+      File.join(File.dirname(__FILE__), "..", "..", "plugins")
+    end
+
+    def user_plugins_path
+      File.join(File.dirname($PROGRAM_NAME), "plugins")
+    end
 
     def board(name = "default")
       name = name.to_s
