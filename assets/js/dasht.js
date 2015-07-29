@@ -44,25 +44,6 @@ function dasht_init() {
             columnWidth: 0
         });
     }
-
-    $(".graph").width($(".tile").width());
-    $(".graph").height($(".tile").height() - 40);
-
-    var graph = new Rickshaw.Graph( {
-        element: document.querySelector(".graph"),
-        series: [{
-            color: '#000000',
-            min: 0,
-            max: 1000,
-            data: [
-                { x: 0, y: 40 },
-                { x: 1, y: 49 },
-                { x: 2, y: 38 },
-                { x: 3, y: 30 },
-                { x: 4, y: 32 } ]
-        }]
-    });
-    graph.render();
 }
 
 function dasht_schedule_timer(metric, resolution, refresh) {
@@ -82,16 +63,12 @@ function dasht_schedule_timer(metric, resolution, refresh) {
 function dasht_update_metric(metric, resolution, refresh) {
     var url = "/data/" + metric + "/" + resolution;
     var selector = '[data-metric="' + metric + '"][data-resolution="' + resolution + '"]';
+    var key = [metric, resolution];
+
     $.get(url).done(function(value) {
         // Update the UI.
-        var selector = '[data-metric="' + metric + '"][data-resolution="' + resolution + '"]';
         $(selector).each(function(index, el) {
-            var old_value = $(el).data("value");
-            if (old_value != value) {
-                $(el).html(value);
-                $(el).data("value", value);
-                $(el).trigger('changed', [old_value, value]);
-            }
+            $(el).trigger('update', value);
         });
 
         // Schedule the new timer.

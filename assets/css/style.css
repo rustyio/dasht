@@ -18,7 +18,7 @@ body {
     right: 0;
     bottom: 0;
     /* background: url(/assets/images/background.jpg) fixed center no-repeat; */
-    opacity: 0.4;
+    opacity: 0.2;
 }
 
 /*** CONTAINER ***/
@@ -41,12 +41,7 @@ body {
     width: 300px;
 }
 
-.value-tile {
-    margin-bottom: 20px;
-    float: left;
-}
-
-.value-tile .title {
+.tile .title {
     position: relative;
     font-size: 16px;
     text-align: left;
@@ -55,9 +50,10 @@ body {
     font-weight: bold;
     padding-bottom: 3px;
     letter-spacing: 0.05em;
+    border-bottom: solid 8px rgba(0, 0, 0, 0.4);
 }
 
-.value-tile .metric {
+.tile .metric {
     font-family: 'Lato', sans-serif;
     color: rgba(255, 255, 255, 0.9);
     border-radius: 3px;
@@ -70,39 +66,19 @@ body {
     font-weight: bold;
 }
 
-.value-tile .progress {
-    margin: 0px 0px;
-    border: solid 1px rgba(0, 0, 0, 0.4);
-    background-color: rgba(0, 0, 0, 0.15);
-}
-
-.value-tile .progress div {
-    background-color: rgba(0, 0, 0, 0.4);
-    height: 8px;
-    width: 100%;
-}
-
-.graph {
-    margin-top: 40px;
-    position: fixed;
-}
-
-.rickshaw_graph svg {
-    z-index: -1;
-    opacity: 0.1;
-}
-
 @media (max-width: 640px) {
     #container {
         width: 100%;
         padding: 20px;
         margin: 0px;
     }
+
     .value-tile {
         display: block;
         height: auto;
         width: 100%;
     }
+
     .value-tile .metric {
         font-size: 30px;
     }

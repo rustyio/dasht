@@ -44,7 +44,7 @@ module Dasht
         metric = match[1]
         resolution = match[2]
         data = parent.collector.get(metric, resolution.to_i) || 0
-        return ['200', {'Content-Type' => 'text/html'}, [data.to_s]]
+        return ['200', {'Content-Type' => 'application/json'}, [data.to_json]]
       end
 
       return ['404', {'Content-Type' => 'text/html'}, ["Path not found: #{env['REQUEST_PATH']}"]]
