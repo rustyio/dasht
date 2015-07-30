@@ -1,26 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" class="">
+<html lang='en' class=''>
   <head>
     <meta charset='utf-8'>
-    <link rel="stylesheet" type="text/css" href="/assets/css/chartist.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link rel='stylesheet' type='text/css' href='/assets/css/chartist.min.css'>
+    <link rel='stylesheet' type='text/css' href='/assets/css/style.css'>
     <%= emit_plugin_css %>
   </head>
   <body>
-    <div id="background"></div>
-    <div id="container-wrapper">
-      <div id="container" />
+    <div id='background'></div>
+    <div id='container-wrapper'>
+      <div id='container'></div>
     </div>
     <%= emit_plugin_html %>
-    <script src="/assets/js/jquery-1.11.3.min.js"></script>
-    <script src="/assets/js/masonry.pkgd.min.js"></script>
-    <script src="/assets/js/mustache.min.js"></script>
-    <script src="/assets/js/countUp.min.js"></script>
-    <script src="/assets/js/dasht.js"></script>
+    <script src='/assets/js/jquery-1.11.3.min.js'></script>
+    <script src='/assets/js/underscore-min.js'></script>
+    <script src='/assets/js/mustache.min.js'></script>
+    <script src='/assets/js/masonry.pkgd.min.js'></script>
+    <script src='/assets/js/countUp.min.js'></script>
+    <script src='/assets/js/dasht.js'></script>
+    <script src='//maps.googleapis.com/maps/api/js'>
+    </script>
     <%= emit_plugin_js %>
     <%= emit_tile_js %>
     <script>
-     dasht_init();
+     window.onload = dasht_init;
     </script>
   </body>
 </html>

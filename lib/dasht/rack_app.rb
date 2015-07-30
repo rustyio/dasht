@@ -13,7 +13,7 @@ module Dasht
     def run(port)
       context = self
       app = Rack::Builder.new do
-        use Rack::Static, :urls => ["/assets"], :root => context.root_path
+        use Rack::Static, :urls => ["/assets"], :root  => context.root_path
         run lambda { |env|
           begin
             context._call(env)

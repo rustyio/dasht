@@ -60,9 +60,8 @@ module Dasht
       @event_definitions.each do |metric, regex, op, value, block|
         begin
           regex.match(line) do |matches|
-            if block
-              value = block.call(matches)
-            end
+            value = matches[0] if value.nil?
+            value = block.call(matches) if block
             set(metric, value, op) if value
           end
         rescue => e

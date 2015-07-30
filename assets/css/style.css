@@ -1,12 +1,17 @@
 @import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
 @import url(http://fonts.googleapis.com/css?family=Lato:400,700);
 
+html {
+    height: 100%
+}
+
 body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     background-color: #345;
-    padding: 0;
-    margin: 0;
 }
 
 /*** BACKGROUND ***/

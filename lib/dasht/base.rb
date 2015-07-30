@@ -58,7 +58,7 @@ module Dasht
     end
 
     def system_plugins_path
-      File.join(File.dirname(__FILE__), "..", "..", "plugins")
+      File.join(File.dirname(__FILE__), "..", "..", "assets", "plugins")
     end
 
     def user_plugins_path

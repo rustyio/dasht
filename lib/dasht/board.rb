@@ -18,24 +18,21 @@ module Dasht
     end
 
     def emit_plugin_css
-      _emit_css(parent.system_plugins_path) +
-        _emit_css(parent.user_plugins_path)
+      _emit_css(parent.system_plugins_path)
     end
 
     def emit_plugin_html
-      _emit_html(parent.system_plugins_path) +
-        _emit_html(parent.user_plugins_path)
+      _emit_html(parent.system_plugins_path)
     end
 
     def emit_plugin_js
-      _emit_js(parent.system_plugins_path) +
-        _emit_js(parent.user_plugins_path)
+      _emit_js(parent.system_plugins_path)
     end
 
     def method_missing(method, *args, &block)
       begin
         metric = args.shift
-        options = args.pop
+        options = args.pop || {}
         @tiles << {
           :type       => method,
           :metric     => metric,
@@ -54,9 +51,11 @@ module Dasht
 
     def emit_tile_js
       s = "<script>\n"
+      s += "$(function() {\n";
       @tiles.map do |options|
         s += "add_tile(#{options.to_json});\n"
       end
+      s += "});"
       s += "</script>\n"
       s
     end
@@ -64,9 +63,8 @@ module Dasht
     def _emit_css(plugin_path)
       s = ""
       Dir[File.join(plugin_path, "*.css")].each do |path|
-        s += "<style>\n"
-        s += IO.read(path)
-        s += "</style>\n"
+        name = File.basename(path)
+        s += "<link rel='stylesheet' type='text/css' href='/assets/plugins/#{name}'>\n"
       end
       return s
     end
@@ -85,9 +83,8 @@ module Dasht
     def _emit_js(plugin_path)
       s = ""
       Dir[File.join(plugin_path, "*.js")].each do |path|
-        s += "<script>\n"
-        s += IO.read(path)
-        s += "</script>\n"
+        name = File.basename(path)
+        s += "<script src='/assets/plugins/#{name}'></script>\n"
       end
       s
     end
