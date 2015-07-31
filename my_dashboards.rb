@@ -24,9 +24,9 @@ dasht do |d|
 
   # Publish a board.
   d.board do |b|
-    b.value :lines, :title => "Number of Lines", :resolution => 999, :width => 3, :height => 2
-    b.value :bytes, :title => "Number of Bytes", :resolution => 999, :width => 3, :height => 2
-    b.map :places, :title => "Incoming Leads", :width => 6, :height => 2, :n => 999
+    b.value :lines, :title => "Number of Lines", :resolution => 999, :width => 3, :height => 1
+    b.value :bytes, :title => "Number of Bytes", :resolution => 999, :width => 3, :height => 1
+    b.map :places, :title => "Incoming Leads", :width => 6, :height => 3, :n => 999
     # b.scroll :router, :title => "Router Requests"
   end
 end

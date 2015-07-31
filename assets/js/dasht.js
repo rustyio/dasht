@@ -36,14 +36,12 @@ function dasht_init() {
     });
 
 
-    // if ($(document).width() > 640) {
-    //     $('#container').masonry({
-    //         itemSelector: '.tile',
-    //         // isFitWidth: true,
-    //         gutter: 0,
-    //         columnWidth: 133
-    //     });
-    // }
+    if ($(document).width() > 640) {
+        $('#container').masonry({
+            itemSelector: '.tile',
+            isFitWidth: true
+        });
+    }
 }
 
 function dasht_schedule_timer(metric, resolution, refresh) {
