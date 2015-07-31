@@ -11,6 +11,10 @@ function map_init(el, options) {
     window.markers = [];
     var geocoder = new google.maps.Geocoder();
 
+    // Set the map height to be tile height minus title height.
+    $(el).find(".map").height($(el).height() - $(el).find(".title").outerHeight());
+
+    // Update with pins.
     $(el).on("update", function(event, value) {
         if (_.isEqual(old_value, value)) return;
 

@@ -1,9 +1,12 @@
-.map-tile {
-    width: 960px;
+.map-tile .title {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 20px;
 }
 
 .map-tile .map {
-    height: 500px;
+    display: block;
+    height: 20px;
 }
 
 @media (max-width: 640px) {

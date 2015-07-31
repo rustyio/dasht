@@ -9,13 +9,13 @@ function add_tile(options) {
     }
     var el = $.parseHTML($.trim(Mustache.render(html, options)))[0];
 
+    // Update the page.
+    $("#container").append(el);
+
     // Initialize the element.
     if (window[options.type + "_init"] != undefined) {
         window[options.type + "_init"](el, options);
     }
-
-    // Update the page.
-    $("#container").append(el);
 }
 
 function dasht_init() {
@@ -36,14 +36,14 @@ function dasht_init() {
     });
 
 
-    if ($(document).width() > 640) {
-        $('#container').masonry({
-            itemSelector: '.tile',
-            isFitWidth: true,
-            gutter: 30,
-            columnWidth: 0
-        });
-    }
+    // if ($(document).width() > 640) {
+    //     $('#container').masonry({
+    //         itemSelector: '.tile',
+    //         // isFitWidth: true,
+    //         gutter: 0,
+    //         columnWidth: 133
+    //     });
+    // }
 }
 
 function dasht_schedule_timer(metric, resolution, refresh) {

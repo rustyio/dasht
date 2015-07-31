@@ -19,15 +19,14 @@ dasht do |d|
   end
 
   d.append :places, /"lead_property_address"=>"([^"]+)"/ do |matches|
-    d.log matches[1]
     matches[1]
   end
 
   # Publish a board.
   d.board do |b|
-    b.value :lines, :title => "Number of Lines", :resolution => 999
-    b.value :bytes, :title => "Number of Bytes", :resolution => 999
+    b.value :lines, :title => "Number of Lines", :resolution => 999, :width => 3, :height => 2
+    b.value :bytes, :title => "Number of Bytes", :resolution => 999, :width => 3, :height => 2
+    b.map :places, :title => "Incoming Leads", :width => 6, :height => 2, :n => 999
     # b.scroll :router, :title => "Router Requests"
-    b.map :places, :title => "Incoming Leads", :n => 999
   end
 end

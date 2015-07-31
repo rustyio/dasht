@@ -40,6 +40,7 @@ module Dasht
           :refresh    => 1,
           :width      => 1,
           :height     => 1,
+          :fontsize   => :medium,
           :extra_args => args
         }.merge(options)
       rescue => e
@@ -74,7 +75,9 @@ module Dasht
       Dir[File.join(plugin_path, "*.html")].each do |path|
         name = File.basename(path).gsub(".html", "")
         s += "<script id='#{name}-template' type='x-tmpl-mustache'>\n"
+        s += "<div class='tile #{name}-tile width-{{width}} height-{{height}} fontsize-{{fontsize}}'>\n"
         s += IO.read(path)
+        s += "</div>\n"
         s += "</script>\n"
       end
       return s

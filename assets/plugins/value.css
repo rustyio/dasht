@@ -1,13 +1,13 @@
-.value-tile {
-    width: 300px;
-}
-
 .value-tile .metric {
+    font-family: 'Lato', sans-serif;
+    color: rgba(255, 255, 255, 0.9);
+    vertical-align: middle;
+    margin: auto;
     text-align: center;
     font-size: 80px;
     line-height: 80x;
     font-weight: bold;
-    padding: 20px 0px;
+    margin: 20px;
 }
 
 @media (max-width: 640px) {
