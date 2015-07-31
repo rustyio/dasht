@@ -43,30 +43,44 @@ function dasht_init() {
     }
 }
 
+function _resize_helper(selector, size, min_size, max_size) {
+    var elements = $(selector);
+
+    var any_too_small = function() {
+        return _.any(elements, function(el) {
+            return (($(el)[0].scrollWidth <= $(el).innerWidth()) ||
+                    ($(el)[0].scrollHeight <= $(el).innerHeight()));
+        });
+    }
+
+    var any_too_big = function() {
+        return _.any(elements, function(el) {
+            return (($(el)[0].scrollWidth > $(el).innerWidth()) ||
+                    ($(el)[0].scrollHeight > $(el).innerHeight()));
+        });
+    }
+
+    while (size <= max_size && any_too_small()) {
+        size = size + 1;
+        $(elements).css("font-size", size + "px");
+    }
+
+    while (size >= min_size && any_too_big()) {
+        size = size - 1;
+        $(elements).css("font-size", size + "px");
+    }
+
+    return size;
+}
+
+window.fontsize_small = 12;
+window.fontsize_medium = 30;
+window.fontsize_large = 80;
+
 function dasht_resize_text() {
-    var min_size = 30;
-    var max_size = 200;
-    $(".resize-text").each(function(index, el) {
-        $(el).css("overflow", "scroll");
-
-        // Grow it.
-        console.log($(el)[0].scrollWidth, $(el).innerWidth());
-        console.log($(el)[0].scrollHeight, $(el).innerHeight());
-        while (($(el)[0].scrollWidth <= $(el).innerWidth()) &&
-               ($(el)[0].scrollHeight <= $(el).innerHeight())) {
-            var fontSize = parseInt($(el).css("font-size"));
-            if (fontSize >= max_size) break;
-            $(el).css("font-size", (fontSize + 1) + "px");
-        }
-
-        // Shrink it.
-        while (($(el)[0].scrollWidth > $(el).innerWidth()) ||
-               ($(el)[0].scrollHeight > $(el).innerHeight())) {
-            var fontSize = parseInt($(el).css("font-size"));
-            if (fontSize <= min_size) break;
-            $(el).css("font-size", (fontSize - 1) + "px");
-        }
-    });
+    window.fontsize_small = _resize_helper(".fontsize-small", window.fontsize_small, 10, 20);
+    window.fontsize_medium = _resize_helper(".fontsize-medium", window.fontsize_medium, 25, 45);
+    window.fontsize_large = _resize_helper(".fontsize-large", window.fontsize_large, 55, 90);
 }
 
 function dasht_schedule_timer(metric, resolution, refresh) {

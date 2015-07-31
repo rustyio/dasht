@@ -14,8 +14,6 @@ body {
     background-color: #345;
 }
 
-/*** CONTAINER ***/
-
 #container {
     display: block;
     width: 100%;
@@ -41,6 +39,10 @@ body {
     letter-spacing: 0.05em;
     font-weight: bold;
     z-index: 10;
+}
+
+.resize-text {
+    overflow: scroll;
 }
 
 .width-1 { width: 16%; }
