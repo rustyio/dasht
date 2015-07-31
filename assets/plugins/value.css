@@ -6,12 +6,12 @@
     font-size: 80px;
     line-height: 80x;
     font-weight: bold;
-    margin: 20px;
+    margin: 0px 20px;
 }
 
 @media (max-width: 640px) {
     .value-tile .metric {
-        margin-top: 12px;
+        padding-top: 20px;
         font-size: 30px;
     }
 }

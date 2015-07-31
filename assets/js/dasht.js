@@ -43,6 +43,32 @@ function dasht_init() {
     }
 }
 
+function dasht_resize_text() {
+    var min_size = 30;
+    var max_size = 200;
+    $(".resize-text").each(function(index, el) {
+        $(el).css("overflow", "scroll");
+
+        // Grow it.
+        console.log($(el)[0].scrollWidth, $(el).innerWidth());
+        console.log($(el)[0].scrollHeight, $(el).innerHeight());
+        while (($(el)[0].scrollWidth <= $(el).innerWidth()) &&
+               ($(el)[0].scrollHeight <= $(el).innerHeight())) {
+            var fontSize = parseInt($(el).css("font-size"));
+            if (fontSize >= max_size) break;
+            $(el).css("font-size", (fontSize + 1) + "px");
+        }
+
+        // Shrink it.
+        while (($(el)[0].scrollWidth > $(el).innerWidth()) ||
+               ($(el)[0].scrollHeight > $(el).innerHeight())) {
+            var fontSize = parseInt($(el).css("font-size"));
+            if (fontSize <= min_size) break;
+            $(el).css("font-size", (fontSize - 1) + "px");
+        }
+    });
+}
+
 function dasht_schedule_timer(metric, resolution, refresh) {
     var key = [metric,resolution];
 
