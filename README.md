@@ -1,15 +1,12 @@
 # TODO
 
-+ Fix exception logging.
++ DONE - Fix responsiveness.
++ DONE - Fix exception logging.
+
++ Automatically reduce font for value fields.
++ Count up with more resource efficiency.
 + Update map to look up by things other than email address.
 + Remove points from the map.
 + Clear out old stats to free memory.
-
-Layout Stuff:
-
-+ Allow tiles to have width and height multipliers.
-+ Automatically reduce font for value fields.
-+ Set max height for scroll type.
 + Respect font sizes.
-
-# Better Layout
++ Fix up tile.

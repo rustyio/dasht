@@ -16,7 +16,12 @@ module Dasht
     end
 
     def log(s)
-      print "\r#{s}\n"
+      if s.class < Exception
+        print "\r#{s}\n"
+        print s.backtrace.join("\n")
+      else
+        print "\r#{s}\n"
+      end
     end
 
     ### COLLECTOR ###

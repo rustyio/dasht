@@ -38,8 +38,7 @@ function dasht_init() {
 
     if ($(document).width() > 640) {
         $('#container').masonry({
-            itemSelector: '.tile',
-            isFitWidth: true
+            itemSelector: '.tile'
         });
     }
 }

@@ -10,14 +10,7 @@
 }
 
 @media (max-width: 640px) {
-    .map-tile {
-        display: block;
-        height: auto;
-        width: 100%;
-    }
-
-    .map-tile .metric {
-        font-size: 12px;
-        line-height: 20px;
+    .map-tile .map {
+        height: 500px;
     }
 }

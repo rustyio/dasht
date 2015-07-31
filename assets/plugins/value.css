@@ -10,13 +10,8 @@
 }
 
 @media (max-width: 640px) {
-    .value-tile {
-        display: block;
-        height: auto;
-        width: 100%;
-    }
-
     .value-tile .metric {
+        margin-top: 12px;
         font-size: 30px;
     }
 }
