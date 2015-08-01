@@ -29,22 +29,29 @@ module Dasht
       return
     end
 
-    def enum(ts)
+    def enum(start_ts, end_ts = nil)
       # Get a pointer to our location in the data.
-      pointer = @data.tail_pointer
+      start_pointer = nil
+      end_pointer = nil
+      prev_p = nil
       @checkpoints.enum.each do |s, p|
-        if ts <= s
-          pointer = p
-          break
-        end
+        start_pointer ||= p if start_ts <= s
+        end_pointer   ||= prev_p if end_ts && end_ts <= s
+        break if start_pointer && (end_ts.nil? || end_pointer)
+        prev_p = p
       end
+      start_pointer ||= @data.tail_pointer
+      end_pointer ||= @data.tail_pointer
 
       # Enumerate through the data, then tack on the last item.
       Enumerator.new do |yielder|
-        @data.enum(pointer).each do |data|
+        @data.enum(start_pointer, end_pointer).each do |data|
           yielder << data
         end
-        if @last_item && ts <= @last_ts
+        # Maybe include the last item.
+        if @last_item &&
+           (start_ts <= @last_ts) &&
+           (end_ts.nil? || (@last_ts < end_ts))
           yielder << @last_item
         end
       end

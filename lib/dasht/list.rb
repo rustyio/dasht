@@ -34,12 +34,11 @@ module Dasht
 
     # Public: Return an enumerator that walks through the list, yielding
     # data.
-    def enum(pointer = nil)
-      pointer ||= head_pointer
-      index = _pointer_to_index(pointer)
-      length = @values.length
+    def enum(start_pointer = nil, end_pointer = nil)
+      index = _pointer_to_index(start_pointer || head_pointer)
+      end_index = _pointer_to_index(end_pointer || tail_pointer)
       return Enumerator.new do |yielder|
-        while index < length
+        while index < end_index
           yielder << @values[index]
           index += 1
         end
