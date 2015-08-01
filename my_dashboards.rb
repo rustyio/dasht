@@ -31,10 +31,10 @@ dasht do |d|
 
   # Publish a board.
   d.board do |b|
-    b.metric :lines, :title => "Number of Lines", :resolution => 999, :width => 2, :height => 1, :fontsize => :large
-    b.metric :bytes, :title => "Number of Bytes", :resolution => 999, :width => 2, :height => 1, :fontsize => :large
-    b.metric :bytes, :title => "Number of Bytes", :resolution => 999, :width => 2, :height => 1, :fontsize => :large
-    b.map :places2, :title => "Incoming Leads", :width => 6, :height => 3, :n => 999
+    b.metric :lines, :title => "Number of Lines", :resolution => 999, :width => 4, :height => 3, :fontsize => :large
+    b.metric :bytes, :title => "Number of Bytes", :resolution => 999, :width => 4, :height => 3, :fontsize => :large
+    b.metric :bytes, :title => "Number of Bytes", :resolution => 999, :width => 4, :height => 3, :fontsize => :large
+    b.map :places2, :title => "Incoming Leads", :width => 12, :height => 9, :n => 999
     # b.scroll :router, :title => "Router Requests"
   end
 end

@@ -9,6 +9,7 @@
 + DONE - Custom map css.
 + DONE - Update map to look up by things other than email address.
 
++ Change layout to 12 * 12 grid.
 + Create a CSS class that causes an element to fill available height.
 + Remove points from the map.
 + Clear out old stats to free memory.

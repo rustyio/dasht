@@ -38,8 +38,8 @@ module Dasht
           :metric     => metric,
           :resolution => 60,
           :refresh    => 1,
-          :width      => 1,
-          :height     => 1,
+          :width      => 3,
+          :height     => 4,
           :fontsize   => :medium,
           :extra_args => args
         }.merge(options)
