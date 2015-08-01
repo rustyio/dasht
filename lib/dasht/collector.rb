@@ -23,19 +23,19 @@ module Dasht
       @event_definitions = []
     end
 
-    def set(metric, value, op = :last, time = Time.now)
+    def set(metric, value, op, ts)
       @metric_operations[metric] = op
       m = (@metric_values[metric] ||= Metric.new)
-      m.append(value, time) do |old_value, new_value|
+      m.append(value, ts) do |old_value, new_value|
         [old_value, new_value].compact.flatten.send(op)
       end
     end
 
-    def get(metric, resolution = 60, time = Time.now)
+    def get(metric, start_ts, end_ts)
       m = @metric_values[metric]
       return [] if m.nil?
       op = @metric_operations[metric]
-      m.enum(time.to_i - resolution).to_a.flatten.send(op)
+      m.enum(start_ts, end_ts).to_a.flatten.send(op)
     end
 
     def run
@@ -57,12 +57,13 @@ module Dasht
     private
 
     def _consume_line(line)
+      ts = Time.now.to_i
       @event_definitions.each do |metric, regex, op, value, block|
         begin
           regex.match(line) do |matches|
             value = matches[0] if value.nil?
             value = block.call(matches) if block
-            set(metric, value, op) if value
+            set(metric, value, op, ts) if value
           end
         rescue => e
           parent.log e

@@ -23,6 +23,7 @@ Dasht.metric_init = function(el, options) {
     metric.css("line-height", metric.height() + "px");
     metric.css("vertical-align", "center");
     $(el).on('update', function(event, value) {
+        value = value[0];
         if (_.isEqual(old_value, value)) return;
         Dasht.metric_count_up(metric, old_value, value);
         old_value = value;

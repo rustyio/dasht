@@ -62,6 +62,7 @@ Dasht.map_init = function(el, options) {
 
     // Update with pins.
     $(el).on("update", function(event, value) {
+        value = value[0];
         if (_.isEqual(old_value, value)) return;
 
         // Plot each marker.

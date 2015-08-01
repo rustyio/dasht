@@ -27,7 +27,7 @@ module Dasht
     ### COLLECTOR ###
 
     def set(metric, value, op = :last)
-      collector.set(metric, value, op)
+      collector.set(metric, value, op, Time.now.to_i)
     end
 
     def get(metric, resolution = 60)

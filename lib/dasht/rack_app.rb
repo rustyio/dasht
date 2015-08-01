@@ -40,10 +40,15 @@ module Dasht
         end
       end
 
-      /^\/data\/(.+)\/(\d+)/.match(env["REQUEST_PATH"]) do |match|
-        metric = match[1]
-        resolution = match[2]
-        data = parent.collector.get(metric, resolution.to_i) || 0
+      /^\/data\/(.+)/.match(env["REQUEST_PATH"]) do |match|
+        parts = match[1].split('/')
+        metric     = parts.shift
+        resolution = parts.shift.to_i
+        history    = (parts.shift || 1).to_i
+        ts = Time.now.to_i - (resolution * history)
+        data = (1..history).map do |n|
+          parent.collector.get(metric, ts, ts += resolution) || 0
+        end
         return ['200', {'Content-Type' => 'application/json'}, [data.to_json]]
       end
 

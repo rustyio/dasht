@@ -1,5 +1,6 @@
 require 'dasht'
 require 'net/http'
+require 'timeout'
 
 dasht do |d|
   # Tail a log.
@@ -25,8 +26,15 @@ dasht do |d|
 
   d.append :places2, /for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
     url = "http://freegeoip.net/json/#{matches[1]}"
-    h = JSON.parse(Net::HTTP.get(URI.parse(url)))
-    { :latitude => h['latitude'], :longitude => h['longitude'] }
+    begin
+      Timeout::timeout(0.2) do
+        h = JSON.parse(Net::HTTP.get(URI.parse(url)))
+        { :latitude => h['latitude'], :longitude => h['longitude'] }
+      end
+    rescue Timeout::Error => e
+      print "\nLookup failed for #{url}!\n"
+      nil
+    end
   end
 
   # Publish a board.
