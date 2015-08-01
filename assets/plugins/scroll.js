@@ -1,4 +1,4 @@
-function scroll_init(el, options) {
+Dasht.scroll_init = function(el, options) {
     var old_value = undefined;
     var num_entries = options["n"] || 10;
     var metric = $(el).find(".metric");

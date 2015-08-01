@@ -1,4 +1,4 @@
-function count_up(el, start_value, end_value, n = 10) {
+Dasht.metric_count_up = function(el, start_value, end_value, n = 10) {
     var i = 0;
     var step = Math.floor((end_value - start_value) / n);
     var timeout = setInterval(function() {
@@ -13,7 +13,7 @@ function count_up(el, start_value, end_value, n = 10) {
     }, 1000 / n);
 }
 
-function metric_init(el, options) {
+Dasht.metric_init = function(el, options) {
     var metric = $(el).find(".metric");
     var metric_el = metric.get()[0];
     var old_value = 0;
@@ -24,7 +24,7 @@ function metric_init(el, options) {
     metric.css("vertical-align", "center");
     $(el).on('update', function(event, value) {
         if (_.isEqual(old_value, value)) return;
-        count_up(metric, old_value, value);
+        Dasht.metric_count_up(metric, old_value, value);
         old_value = value;
     });
 }

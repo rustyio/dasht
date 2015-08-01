@@ -19,8 +19,8 @@ Dasht.add_tile = function(options) {
     $("#container").append(el);
 
     // Initialize the element.
-    if (window[options.type + "_init"] != undefined) {
-        window[options.type + "_init"](el, options);
+    if (Dasht[options.type + "_init"] != undefined) {
+        Dasht[options.type + "_init"](el, options);
     }
 }
 

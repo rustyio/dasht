@@ -1,5 +1,4 @@
-
-function map_init(el, options) {
+Dasht.map_init = function(el, options) {
     var old_value = undefined;
     var num_entries = options["n"] || 10;
     var mapOptions = {
