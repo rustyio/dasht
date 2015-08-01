@@ -1,10 +1,23 @@
 Dasht.map_init = function(el, options) {
     var old_value = undefined;
     var num_entries = options["n"] || 10;
+    var styles = [
+        {
+            stylers: [
+                { hue: "#334455" },
+                { saturation: -80 },
+                { lightness: -10 },
+                { gamma: 1 }
+            ]
+        }
+    ];
+
     var mapOptions = {
         zoom: 4,
-        center: new google.maps.LatLng(39.8282, -98.5795)
+        center: new google.maps.LatLng(39.8282, -98.5795),
+        styles: styles
     };
+
     var map_el = $(el).find(".map").get()[0];
     var map = new google.maps.Map(map_el, mapOptions);
     window.markers = [];
