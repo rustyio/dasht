@@ -54,7 +54,7 @@ module Dasht
       s = "<script>\n"
       s += "$(function() {\n";
       @tiles.map do |options|
-        s += "add_tile(#{options.to_json});\n"
+        s += "Dasht.add_tile(#{options.to_json});\n"
       end
       s += "});"
       s += "</script>\n"

@@ -1,6 +1,12 @@
-var dasht_timers = {};
+// Initialize some vars.
+Dasht = new function(){
+    this.timers          = {};
+    this.fontsize_small  = 12;
+    this.fontsize_medium = 30;
+    this.fontsize_large  = 80;
+}();
 
-function add_tile(options) {
+Dasht.add_tile = function(options) {
     // Generate the html.
     var template_key = "#" + options.type + "-template";
     var html = $(template_key).last().html();
@@ -18,7 +24,7 @@ function add_tile(options) {
     }
 }
 
-function dasht_init() {
+Dasht.init = function() {
     $("[data-metric]").each(function(index, el) {
         var metric     = $(el).attr("data-metric");
         var resolution = $(el).attr("data-resolution");
@@ -31,7 +37,7 @@ function dasht_init() {
         if (refresh_rates[key] == undefined || refresh < refresh_rates[key]) {
             // Set the new rate.
             refresh_rates[key] = refresh;
-            dasht_schedule_timer(metric, resolution, refresh);
+            Dasht.schedule_timer(metric, resolution, refresh);
         }
     });
 
@@ -41,9 +47,11 @@ function dasht_init() {
             itemSelector: '.tile'
         });
     }
+
+    setInterval(Dasht.scale_fontsize, 1000);
 }
 
-function _resize_helper(selector, size, min_size, max_size) {
+Dasht._scale_fontsize = function(selector, size, min_size, max_size) {
     var elements = $(selector);
 
     var any_too_small = function() {
@@ -73,31 +81,27 @@ function _resize_helper(selector, size, min_size, max_size) {
     return size;
 }
 
-window.fontsize_small = 12;
-window.fontsize_medium = 30;
-window.fontsize_large = 80;
-
-function dasht_resize_text() {
-    window.fontsize_small = _resize_helper(".fontsize-small", window.fontsize_small, 10, 20);
-    window.fontsize_medium = _resize_helper(".fontsize-medium", window.fontsize_medium, 25, 45);
-    window.fontsize_large = _resize_helper(".fontsize-large", window.fontsize_large, 55, 90);
+Dasht.scale_fontsize = function() {
+    Dasht.fontsize_small  = Dasht._scale_fontsize(".fontsize-small", Dasht.fontsize_small, 10, 20);
+    Dasht.fontsize_medium = Dasht._scale_fontsize(".fontsize-medium", Dasht.fontsize_medium, 25, 45);
+    Dasht.fontsize_large  = Dasht._scale_fontsize(".fontsize-large", Dasht.fontsize_large, 55, 90);
 }
 
-function dasht_schedule_timer(metric, resolution, refresh) {
+Dasht.schedule_timer = function(metric, resolution, refresh) {
     var key = [metric,resolution];
 
     // Clear the old interval.
-    if (dasht_timers[key]) {
-        clearTimeout(dasht_timers[key]);
+    if (Dasht.timers[key]) {
+        clearTimeout(Dasht.timers[key]);
     }
 
     // Create the new interval.
-    dasht_timers[key] = setTimeout(function() {
-        dasht_update_metric(metric, resolution, refresh);
+    Dasht.timers[key] = setTimeout(function() {
+        Dasht.update_metric(metric, resolution, refresh);
     }, refresh * 1000);
 }
 
-function dasht_update_metric(metric, resolution, refresh) {
+Dasht.update_metric = function(metric, resolution, refresh) {
     var url = "/data/" + metric + "/" + resolution;
     var selector = '[data-metric="' + metric + '"][data-resolution="' + resolution + '"]';
     var key = [metric, resolution];
@@ -110,7 +114,7 @@ function dasht_update_metric(metric, resolution, refresh) {
 
         // Schedule the new timer.
         if (refresh) {
-            dasht_schedule_timer(metric, resolution, refresh);
+            Dasht.schedule_timer(metric, resolution, refresh);
         }
     });
 }

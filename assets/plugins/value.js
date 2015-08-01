@@ -1,3 +1,18 @@
+function count_up(el, start_value, end_value, n = 10) {
+    var i = 0;
+    var step = Math.floor((end_value - start_value) / n);
+    var timeout = setInterval(function() {
+        if (i < (n - 1)) {
+            start_value += step;
+            i += 1;
+            $(el).html(start_value.toLocaleString());
+        } else {
+            $(el).html(end_value.toLocaleString());
+            clearTimeout(timeout);
+        }
+    }, 1000 / n);
+}
+
 function value_init(el, options) {
     var metric = $(el).find(".metric");
     var metric_el = metric.get()[0];
@@ -9,8 +24,7 @@ function value_init(el, options) {
     metric.css("vertical-align", "center");
     $(el).on('update', function(event, value) {
         if (_.isEqual(old_value, value)) return;
-        $(metric).html(value);
-        // new CountUp(metric_el, old_value, value, 0, 1.0, { useEasing: false }).start();
+        count_up(metric, old_value, value);
         old_value = value;
     });
 }
