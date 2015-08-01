@@ -13,7 +13,7 @@ function count_up(el, start_value, end_value, n = 10) {
     }, 1000 / n);
 }
 
-function value_init(el, options) {
+function metric_init(el, options) {
     var metric = $(el).find(".metric");
     var metric_el = metric.get()[0];
     var old_value = 0;
