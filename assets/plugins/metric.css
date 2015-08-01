@@ -11,7 +11,8 @@
 
 @media (max-width: 640px) {
     .metric-tile .metric {
-        padding-top: 20px;
+        padding-top: 12px;
+        padding-bottom: 12px;
         font-size: 30px;
     }
 }

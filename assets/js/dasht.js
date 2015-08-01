@@ -82,6 +82,7 @@ Dasht._scale_fontsize = function(selector, size, min_size, max_size) {
 }
 
 Dasht.scale_fontsize = function() {
+
     Dasht.fontsize_small  = Dasht._scale_fontsize(".fontsize-small", Dasht.fontsize_small, 10, 20);
     Dasht.fontsize_medium = Dasht._scale_fontsize(".fontsize-medium", Dasht.fontsize_medium, 25, 45);
     Dasht.fontsize_large  = Dasht._scale_fontsize(".fontsize-large", Dasht.fontsize_large, 55, 90);
