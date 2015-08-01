@@ -1,4 +1,5 @@
 require 'dasht'
+require 'net/http'
 
 dasht do |d|
   # Tail a log.
@@ -22,12 +23,18 @@ dasht do |d|
     matches[1]
   end
 
+  d.append :places2, /for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
+    url = "http://freegeoip.net/json/#{matches[1]}"
+    h = JSON.parse(Net::HTTP.get(URI.parse(url)))
+    { :latitude => h['latitude'], :longitude => h['longitude'] }
+  end
+
   # Publish a board.
   d.board do |b|
     b.metric :lines, :title => "Number of Lines", :resolution => 999, :width => 2, :height => 1, :fontsize => :large
     b.metric :bytes, :title => "Number of Bytes", :resolution => 999, :width => 2, :height => 1, :fontsize => :large
     b.metric :bytes, :title => "Number of Bytes", :resolution => 999, :width => 2, :height => 1, :fontsize => :large
-    b.map :places, :title => "Incoming Leads", :width => 6, :height => 3, :n => 999
+    b.map :places2, :title => "Incoming Leads", :width => 6, :height => 3, :n => 999
     # b.scroll :router, :title => "Router Requests"
   end
 end
