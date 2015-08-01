@@ -1,42 +1,39 @@
 module Dasht
   class Metric
     attr_reader :data, :checkpoints
-    Checkpoint = Struct.new(:time)
 
     def initialize
       @checkpoints = List.new
       @data = List.new
       @last_item = nil
-      @last_secs = nil
+      @last_ts = nil
     end
 
     def to_s
       @data.to_s + " (last: #{@last_item})"
     end
 
-    def append(data, time = Time.now, &block)
+    def append(data, ts, &block)
       # Maybe checkpoint the time.
-      secs = time.to_i
-      if @last_secs == secs
+      if @last_ts == ts
         @last_item = yield(@last_item, data)
       else
-        if @last_secs
+        if @last_ts
           pointer = @data.append(@last_item)
-          @checkpoints.append([@last_secs, pointer])
+          @checkpoints.append([@last_ts, pointer])
         end
-        @last_secs = secs
+        @last_ts = ts
         @last_item = nil
         @last_item = yield(@last_item, data)
       end
       return
     end
 
-    def enum(time)
+    def enum(ts)
       # Get a pointer to our location in the data.
-      secs = time.to_i
       pointer = @data.tail_pointer
       @checkpoints.enum.each do |s, p|
-        if secs <= s
+        if ts <= s
           pointer = p
           break
         end
@@ -47,7 +44,7 @@ module Dasht
         @data.enum(pointer).each do |data|
           yielder << data
         end
-        if @last_item && secs <= @last_secs
+        if @last_item && ts <= @last_ts
           yielder << @last_item
         end
       end
