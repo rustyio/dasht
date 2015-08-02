@@ -1,4 +1,4 @@
-Dasht.metric_count_up = function(el, start_value, end_value, n = 10) {
+Dasht.metric_count_up = function(el, start_value, end_value, speed, n) {
     var i = 0;
     var step = Math.floor((end_value - start_value) / n);
     var timeout = setInterval(function() {
@@ -10,7 +10,7 @@ Dasht.metric_count_up = function(el, start_value, end_value, n = 10) {
             $(el).html(end_value.toLocaleString());
             clearTimeout(timeout);
         }
-    }, 1000 / n);
+    }, (speed / (n - 1)));
 }
 
 Dasht.metric_init = function(el, options) {
@@ -18,14 +18,14 @@ Dasht.metric_init = function(el, options) {
     var metric_el = metric.get()[0];
     var old_value = 0;
 
-    // Set the map height to be tile height minus title height.
+    // Set the metric height to be tile height minus title height.
     metric.height($(el).height() - $(el).find(".title").outerHeight());
     metric.css("line-height", metric.height() + "px");
-    metric.css("vertical-align", "center");
+    metric.css("vertical-align", "baseline");
     $(el).on('update', function(event, value) {
         value = value[0];
         if (_.isEqual(old_value, value)) return;
-        Dasht.metric_count_up(metric, old_value, value);
+        Dasht.metric_count_up(metric, old_value, value, options.refresh * 1000, options.refresh * 10);
         old_value = value;
     });
 }

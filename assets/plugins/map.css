@@ -7,6 +7,7 @@
 .map-tile .map {
     display: block;
     height: 20px;
+    opacity: 0.5;
 }
 
 @media (max-width: 640px) {

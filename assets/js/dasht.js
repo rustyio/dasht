@@ -48,6 +48,13 @@ Dasht.init = function() {
         });
     }
 
+    $(".js-expand").each(function(index, el) {
+        var parent = $(el).parent();
+        $(el).outerHeight(parent.height() - parent.find(".title").outerHeight(true));
+        var marginsize = parseInt($(el).css("margin-left")) + parseInt($(el).css("margin-right"));
+        $(el).outerWidth(parent.width() - marginsize);
+    });
+
     setInterval(Dasht.scale_fontsize, 1000);
 }
 

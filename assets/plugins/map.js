@@ -5,6 +5,7 @@ Dasht.map_plot_address = function(map, markers, geocoder, address) {
 
         // Don't plot a location we've already plotted.
         var location = results[0].geometry.location;
+
         Dasht.map_plot_location(map, markers, location);
     });
 }
@@ -18,6 +19,9 @@ Dasht.map_plot_ip = function(map, markers, ip) {
         success: function(response) {
             var location = new google.maps.LatLng(response.latitude, response.longitude);
             Dasht.map_plot_location(map, markers, location);
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert("Failed!");
         }
     });
 }
@@ -50,10 +54,19 @@ Dasht.map_init = function(el, options) {
     var styles = [
         {
             stylers: [
-                { hue: "#334455" },
-                { saturation: -80 },
-                { lightness: -10 },
-                { gamma: 1 }
+                { hue: "#ffffff" },
+                { saturation: -100 },
+                { lightness: 20 },
+                { gamma: 0.5 }
+            ]
+        },
+        {
+            featureType: "water",
+            stylers: [
+                { hue: "#333333" },
+                { saturation: -100 },
+                { lightness: -60 },
+                { gamma: 0.43 }
             ]
         }
     ];
@@ -82,7 +95,6 @@ Dasht.map_init = function(el, options) {
 
         // Plot each marker.
         _.each(value, function(item, index) {
-            console.log(item, item.search(ip_regex));
             if (item.search(ip_regex) >= 0) {
                 Dasht.map_plot_ip(map, markers, item);
             } else {
