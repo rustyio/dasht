@@ -11,10 +11,13 @@
 + DONE - Change layout to 12 * 12 grid.
 + DONE - Convert map to do IP lookups on client side.
 + DONE - Support for reading multiple groups of data.
-+ Default settings for resolution and refresh.
++ DONE - Load data right away, don't wait.
++ DONE - Cache IP lookups.
 + Chart type tile.
 + Comparison type tile. (Up / down X percent.)
 + Create a CSS class that causes an element to fill available height.
++ Board level settings for resolution and refresh.
++ Board level settings for element size.
 + Remove points from the map.
 + Clear out old stats to free memory.
 + Fix up scrolling tile.

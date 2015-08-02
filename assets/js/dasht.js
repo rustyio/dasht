@@ -37,7 +37,9 @@ Dasht.init = function() {
         if (refresh_rates[key] == undefined || refresh < refresh_rates[key]) {
             // Set the new rate.
             refresh_rates[key] = refresh;
-            Dasht.schedule_timer(metric, resolution, refresh);
+            setTimeout(function() {
+                Dasht.update_metric(metric, resolution, refresh);
+            }, 0);
         }
     });
 

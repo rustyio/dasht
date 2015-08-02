@@ -1,16 +1,33 @@
+Dasht.map_geocoder_cache = {}
+
 Dasht.map_plot_address = function(map, markers, geocoder, address) {
+    // Maybe pull the location from cache.
+    var location;
+    if (location = Dasht.map_geocoder_cache[address]) {
+        Dasht.map_plot_location(map, markers, location);
+        return;
+    }
+
     geocoder.geocode({ "address": address }, function(results, status) {
         // Don't plot if the lookup failed.
         if (status != google.maps.GeocoderStatus.OK) return;
 
         // Don't plot a location we've already plotted.
         var location = results[0].geometry.location;
+        Dasht.map_geocoder_cache[address] = location;
 
         Dasht.map_plot_location(map, markers, location);
     });
 }
 
 Dasht.map_plot_ip = function(map, markers, ip) {
+    // Maybe pull the location from cache.
+    var location;
+    if (location = Dasht.map_geocoder_cache[ip]) {
+        Dasht.map_plot_location(map, markers, location);
+        return;
+    }
+
     // http://freegeoip.net/json/
     jQuery.ajax({
         url: 'http://104.236.251.84/json/' + ip,
@@ -18,6 +35,7 @@ Dasht.map_plot_ip = function(map, markers, ip) {
         dataType: 'jsonp',
         success: function(response) {
             var location = new google.maps.LatLng(response.latitude, response.longitude);
+            Dasht.map_geocoder_cache[ip] = location;
             Dasht.map_plot_location(map, markers, location);
         },
         error: function (xhr, ajaxOptions, thrownError) {
