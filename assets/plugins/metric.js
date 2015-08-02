@@ -22,11 +22,13 @@ Dasht.metric_init = function(el, options) {
     Dasht.fill_tile(metric);
     metric.css("line-height", metric.innerHeight() + "px");
 
-    // Handle value updates.
-    $(el).on('update', function(event, value) {
-        value = value[0];
-        if (_.isEqual(old_value, value)) return;
-        Dasht.metric_count_up(metric, old_value, value, options.refresh * 1000, options.refresh * 10);
-        old_value = value;
-    });
+    // Update values.
+    setTimeout(function() {
+        Dasht.update_metric(options, function(value) {
+            value = value[0];
+            if (_.isEqual(old_value, value)) return;
+            Dasht.metric_count_up(metric, old_value, value, options.refresh * 1000, options.refresh * 10);
+            old_value = value;
+        });
+    }, 1000);
 }

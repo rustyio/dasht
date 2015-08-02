@@ -1,6 +1,5 @@
 // Initialize some vars.
 Dasht = new function(){
-    this.timers          = {};
     this.fontsize_small  = 12;
     this.fontsize_medium = 30;
     this.fontsize_large  = 80;
@@ -25,25 +24,6 @@ Dasht.add_tile = function(options) {
 }
 
 Dasht.init = function() {
-    $("[data-metric]").each(function(index, el) {
-        var metric     = $(el).attr("data-metric");
-        var resolution = $(el).attr("data-resolution");
-        var history    = $(el).attr("data-history") || 1;
-        var refresh    = $(el).attr("data-refresh");
-
-        // Schedule the timer, but only if it refreshes more quickly than an
-        // existing timer.
-        var refresh_rates = {};
-        var key = [metric,resolution];
-        if (refresh_rates[key] == undefined || refresh < refresh_rates[key]) {
-            // Set the new rate.
-            refresh_rates[key] = refresh;
-            setTimeout(function() {
-                Dasht.update_metric(metric, resolution, history, refresh);
-            }, 1000);
-        }
-    });
-
     if ($(document).width() > 640) {
         $('#container').masonry({
             itemSelector: '.tile'
@@ -91,40 +71,25 @@ Dasht._scale_fontsize = function(selector, size, min_size, max_size) {
 }
 
 Dasht.scale_fontsize = function() {
-
     Dasht.fontsize_small  = Dasht._scale_fontsize(".fontsize-small", Dasht.fontsize_small, 10, 20);
     Dasht.fontsize_medium = Dasht._scale_fontsize(".fontsize-medium", Dasht.fontsize_medium, 25, 45);
     Dasht.fontsize_large  = Dasht._scale_fontsize(".fontsize-large", Dasht.fontsize_large, 55, 90);
 }
 
-Dasht.schedule_timer = function(metric, resolution, history, refresh) {
-    var key = [metric,resolution];
 
-    // Clear the old interval.
-    if (Dasht.timers[key]) {
-        clearTimeout(Dasht.timers[key]);
-    }
-
-    // Create the new interval.
-    Dasht.timers[key] = setTimeout(function() {
-        Dasht.update_metric(metric, resolution, history, refresh);
-    }, refresh * 1000);
-}
-
-Dasht.update_metric = function(metric, resolution, history, refresh) {
-    var url = "/data/" + metric + "/" + resolution + "/" + history;;
-    var selector = '[data-metric="' + metric + '"][data-resolution="' + resolution + '"]';
-    var key = [metric, resolution];
+Dasht.update_metric = function(options, callback) {
+    var metric     = options["metric"];
+    var resolution = options["resolution"] || 60;
+    var history    = options["history"]    || 1;
+    var refresh    = options["refresh"]    || 5;
+    var url = "/data/" + options.metric + "/" + options.resolution + "/" + history;
 
     $.get(url).done(function(value) {
         // Update the UI.
-        $(selector).each(function(index, el) {
-            $(el).trigger('update', [value]);
-        });
+        callback(value);
 
-        // Schedule the new timer.
-        if (refresh) {
-            Dasht.schedule_timer(metric, resolution, history, refresh);
-        }
+        setTimeout(function() {
+            Dasht.update_metric(options, callback);
+        }, refresh * 1000);
     });
 }

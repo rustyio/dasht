@@ -26,7 +26,6 @@ Dasht.chart_init = function(el, options) {
     };
 
     var chart_options = {
-        animation: false,
         showScale: false,
         showTooltips: false,
         pointDot : false
@@ -36,13 +35,19 @@ Dasht.chart_init = function(el, options) {
     var chart = new Chart(ctx).Line(chart_data, chart_options);
 
     // Handle value updates.
-    $(el).on('update', function(event, value) {
-        console.log(value);
-        if (_.isEqual(old_value, value)) return;
-        for (var i = 0; i < options.history; i++) {
-            chart.datasets[0].points[i].value = value[i];
-        }
-        chart.update();
-        old_value = value;
-    });
+    setTimeout(function() {
+        Dasht.update_metric(options, function(value) {
+            console.log(value);
+            console.log(options);
+            if (_.isEqual(old_value, value)) return;
+
+            // Update chart values.
+            for (var i = 0; i < options.history; i++) {
+                chart.datasets[0].points[i].value = value[i];
+            }
+            chart.update();
+
+            old_value = value;
+        });
+    }, 1000);
 }

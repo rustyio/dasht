@@ -105,20 +105,22 @@ Dasht.map_init = function(el, options) {
 
     Dasht.fill_tile($(el).find(".map"));
 
-    // Update with pins.
-    $(el).on("update", function(event, value) {
-        value = value[0];
-        if (_.isEqual(old_value, value)) return;
+    // Update values.
+    setTimeout(function() {
+        Dasht.update_metric(options, function(value) {
+            value = value[0];
+            if (_.isEqual(old_value, value)) return;
 
-        // Plot each marker.
-        _.each(value, function(item, index) {
-            if (item.search(ip_regex) >= 0) {
-                Dasht.map_plot_ip(map, markers, item);
-            } else {
-                Dasht.map_plot_address(map, markers, geocoder, item);
-            }
+            // Plot each marker.
+            _.each(value, function(item, index) {
+                if (item.search(ip_regex) >= 0) {
+                    Dasht.map_plot_ip(map, markers, item);
+                } else {
+                    Dasht.map_plot_address(map, markers, geocoder, item);
+                }
+            });
+
+            old_value = value;
         });
-
-        old_value = value;
-    });
+    }, 1000);
 }
