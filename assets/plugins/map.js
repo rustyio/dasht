@@ -9,6 +9,19 @@ Dasht.map_plot_address = function(map, markers, geocoder, address) {
     });
 }
 
+Dasht.map_plot_ip = function(map, markers, ip) {
+    // http://freegeoip.net/json/
+    jQuery.ajax({
+        url: 'http://104.236.251.84/json/' + ip,
+        type: 'POST',
+        dataType: 'jsonp',
+        success: function(response) {
+            var location = new google.maps.LatLng(response.latitude, response.longitude);
+            Dasht.map_plot_location(map, markers, location);
+        }
+    });
+}
+
 Dasht.map_plot_location = function(map, markers, location) {
     var location_exists = _.any(markers, function(value) {
         return _.isEqual(value.position, location);
@@ -48,7 +61,8 @@ Dasht.map_init = function(el, options) {
     var mapOptions = {
         zoom: 4,
         center: new google.maps.LatLng(39.8282, -98.5795),
-        styles: styles
+        styles: styles,
+        disableDefaultUI: true
     };
 
     var map_el = $(el).find(".map").get()[0];
@@ -56,6 +70,7 @@ Dasht.map_init = function(el, options) {
     var map = new google.maps.Map(map_el, mapOptions);
     window.markers = [];
     var geocoder = new google.maps.Geocoder();
+    var ip_regex = /\d+\.\d+\.\d+\.\d+/;
 
     // Set the map height to be tile height minus title height.
     $(el).find(".map").height($(el).height() - $(el).find(".title").outerHeight());
@@ -67,11 +82,11 @@ Dasht.map_init = function(el, options) {
 
         // Plot each marker.
         _.each(value, function(item, index) {
-            if (typeof(item) == "string") {
-                Dasht.map_plot_address(map, markers, geocoder, item);
+            console.log(item, item.search(ip_regex));
+            if (item.search(ip_regex) >= 0) {
+                Dasht.map_plot_ip(map, markers, item);
             } else {
-                var location = new google.maps.LatLng(item.latitude, item.longitude)
-                Dasht.map_plot_location(map, markers, location);
+                Dasht.map_plot_address(map, markers, geocoder, item);
             }
         });
 

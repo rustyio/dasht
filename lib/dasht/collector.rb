@@ -11,8 +11,8 @@ module Dasht
       @line_queue        = Queue.new
     end
 
-    def add_line(line)
-      @line_queue.push(line)
+    def add_line(ts, line)
+      @line_queue.push([ts, line])
     end
 
     def add_event_definition(metric, regex, op, value, block)
@@ -41,11 +41,12 @@ module Dasht
     def run
       Thread.new do
         begin
-          while line = @line_queue.pop
+          while true
+            ts, line = @line_queue.pop
             @total_lines += 1
             @total_bytes += line.length
             print "\rConsumed #{@total_lines} lines (#{@total_bytes} bytes)..."
-            _consume_line(line)
+            _consume_line(ts, line)
           end
         rescue => e
           parent.log e
@@ -56,8 +57,7 @@ module Dasht
 
     private
 
-    def _consume_line(line)
-      ts = Time.now.to_i
+    def _consume_line(ts, line)
       @event_definitions.each do |metric, regex, op, value, block|
         begin
           regex.match(line) do |matches|

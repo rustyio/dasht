@@ -1,5 +1,5 @@
-require 'thread'
 require 'rack'
+require 'thread'
 require 'erb'
 require 'json'
 

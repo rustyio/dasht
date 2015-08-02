@@ -1,12 +1,14 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    geocoder (1.2.9)
     rack (1.6.4)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  geocoder
   rack
 
 BUNDLED WITH

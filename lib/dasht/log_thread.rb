@@ -15,7 +15,8 @@ module Dasht
             begin
               IO.popen(@command) do |process|
                 process.each do |line|
-                  parent.collector.add_line(line)
+                  ts = Time.now.to_i
+                  parent.collector.add_line(ts, line)
                 end
               end
             rescue => e
