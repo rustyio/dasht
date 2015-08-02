@@ -28,6 +28,7 @@ Dasht.init = function() {
     $("[data-metric]").each(function(index, el) {
         var metric     = $(el).attr("data-metric");
         var resolution = $(el).attr("data-resolution");
+        var history    = $(el).attr("data-history") || 1;
         var refresh    = $(el).attr("data-refresh");
 
         // Schedule the timer, but only if it refreshes more quickly than an
@@ -38,11 +39,10 @@ Dasht.init = function() {
             // Set the new rate.
             refresh_rates[key] = refresh;
             setTimeout(function() {
-                Dasht.update_metric(metric, resolution, refresh);
-            }, 0);
+                Dasht.update_metric(metric, resolution, history, refresh);
+            }, 1000);
         }
     });
-
 
     if ($(document).width() > 640) {
         $('#container').masonry({
@@ -50,14 +50,14 @@ Dasht.init = function() {
         });
     }
 
-    $(".js-expand").each(function(index, el) {
-        var parent = $(el).parent();
-        $(el).outerHeight(parent.height() - parent.find(".title").outerHeight(true));
-        var marginsize = parseInt($(el).css("margin-left")) + parseInt($(el).css("margin-right"));
-        $(el).outerWidth(parent.width() - marginsize);
-    });
-
     setInterval(Dasht.scale_fontsize, 1000);
+}
+
+Dasht.fill_tile = function(el) {
+    var parent = $(el).parent();
+    $(el).outerHeight(parent.height() - parent.find(".title").outerHeight(true));
+    var marginsize = parseInt($(el).css("margin-left")) + parseInt($(el).css("margin-right"));
+    $(el).outerWidth(parent.width() - marginsize);
 }
 
 Dasht._scale_fontsize = function(selector, size, min_size, max_size) {
@@ -97,7 +97,7 @@ Dasht.scale_fontsize = function() {
     Dasht.fontsize_large  = Dasht._scale_fontsize(".fontsize-large", Dasht.fontsize_large, 55, 90);
 }
 
-Dasht.schedule_timer = function(metric, resolution, refresh) {
+Dasht.schedule_timer = function(metric, resolution, history, refresh) {
     var key = [metric,resolution];
 
     // Clear the old interval.
@@ -107,12 +107,12 @@ Dasht.schedule_timer = function(metric, resolution, refresh) {
 
     // Create the new interval.
     Dasht.timers[key] = setTimeout(function() {
-        Dasht.update_metric(metric, resolution, refresh);
+        Dasht.update_metric(metric, resolution, history, refresh);
     }, refresh * 1000);
 }
 
-Dasht.update_metric = function(metric, resolution, refresh) {
-    var url = "/data/" + metric + "/" + resolution;
+Dasht.update_metric = function(metric, resolution, history, refresh) {
+    var url = "/data/" + metric + "/" + resolution + "/" + history;;
     var selector = '[data-metric="' + metric + '"][data-resolution="' + resolution + '"]';
     var key = [metric, resolution];
 
@@ -124,7 +124,7 @@ Dasht.update_metric = function(metric, resolution, refresh) {
 
         // Schedule the new timer.
         if (refresh) {
-            Dasht.schedule_timer(metric, resolution, refresh);
+            Dasht.schedule_timer(metric, resolution, history, refresh);
         }
     });
 }

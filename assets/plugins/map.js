@@ -103,8 +103,7 @@ Dasht.map_init = function(el, options) {
     var geocoder = new google.maps.Geocoder();
     var ip_regex = /\d+\.\d+\.\d+\.\d+/;
 
-    // Set the map height to be tile height minus title height.
-    $(el).find(".map").height($(el).height() - $(el).find(".title").outerHeight());
+    Dasht.fill_tile($(el).find(".map"));
 
     // Update with pins.
     $(el).on("update", function(event, value) {

@@ -19,9 +19,10 @@ Dasht.metric_init = function(el, options) {
     var old_value = 0;
 
     // Set the metric height to be tile height minus title height.
-    metric.height($(el).height() - $(el).find(".title").outerHeight());
-    metric.css("line-height", metric.height() + "px");
-    metric.css("vertical-align", "baseline");
+    Dasht.fill_tile(metric);
+    metric.css("line-height", metric.innerHeight() + "px");
+
+    // Handle value updates.
     $(el).on('update', function(event, value) {
         value = value[0];
         if (_.isEqual(old_value, value)) return;

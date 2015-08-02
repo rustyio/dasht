@@ -75,7 +75,7 @@ module Dasht
       Dir[File.join(plugin_path, "*.html")].each do |path|
         name = File.basename(path).gsub(".html", "")
         s += "<script id='#{name}-template' type='x-tmpl-mustache'>\n"
-        s += "<div class='tile #{name}-tile width-{{width}} height-{{height}} fontsize-{{fontsize}}'>\n"
+        s += "<div class='tile #{name}-tile width-{{width}} height-{{height}}'>\n"
         s += IO.read(path)
         s += "</div>\n"
         s += "</script>\n"
