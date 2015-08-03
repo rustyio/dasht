@@ -1,7 +1,7 @@
 Dasht.chart_init = function(el, options) {
     var chart = $(el).find(".chart");
     var chart_el = chart.get()[0];
-    var old_value = 0;
+    var old_data = 0;
 
     Dasht.fill_tile(chart);
 
@@ -36,16 +36,15 @@ Dasht.chart_init = function(el, options) {
 
     // Handle value updates.
     setTimeout(function() {
-        Dasht.get_value(options, function(value) {
-            if (_.isEqual(old_value, value)) return;
-
-            // Update chart values.
+        Dasht.get_value(options, function(new_data) {
+            if (_.isEqual(old_data, new_data)) return;
+            // Update chart.
             for (var i = 0; i < options.periods; i++) {
-                chart.datasets[0].points[i].value = value[i];
+                chart.datasets[0].points[i].value = new_data[i];
             }
             chart.update();
 
-            old_value = value;
+            old_data = new_data;
         });
     }, 1000);
 }

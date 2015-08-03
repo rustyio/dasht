@@ -69,7 +69,7 @@ Dasht.map_plot_location = function(map, markers, location) {
 
 Dasht.map_init = function(el, options) {
     // Initialize.
-    var old_value = undefined;
+    var old_data = undefined;
     var styles = [
         {
             stylers: [
@@ -108,12 +108,12 @@ Dasht.map_init = function(el, options) {
 
     // Update values.
     setTimeout(function() {
-        Dasht.get_value(options, function(value) {
-            value = value[0];
-            if (_.isEqual(old_value, value)) return;
+        Dasht.get_value(options, function(new_data) {
+            new_data = new_data[0];
+            if (_.isEqual(old_data, new_data)) return;
 
             // Plot each marker.
-            _.each(value, function(item, index) {
+            _.each(new_data, function(item, index) {
                 if (item.search(ip_regex) >= 0) {
                     Dasht.map_plot_ip(map, markers, item);
                 } else {
@@ -121,7 +121,7 @@ Dasht.map_init = function(el, options) {
                 }
             });
 
-            old_value = value;
+            old_data = new_data;
         });
     }, 1000);
 }

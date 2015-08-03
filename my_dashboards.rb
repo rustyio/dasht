@@ -1,10 +1,6 @@
 require 'dasht'
 
 dasht do |d|
-  # Set some defaults.
-  d.default_resolution = 60
-  d.default_refresh = 5
-
   # Tail a log.
   d.start "heroku logs --tail --app doris"
 
@@ -36,11 +32,10 @@ dasht do |d|
 
   # Publish a board.
   d.board do |b|
-    b.metric :counter, :title => "Counter"
-    b.metric :lines, :title => "Number of Lines"
-    b.metric :bytes, :title => "Number of Bytes"
-    b.chart :bytes,  :title => "Chart of Bytes", :periods => 10, :width => 3
-    b.map :places2,  :title => "Visitors", :width => 12, :height => 9
-    # b.scroll :router, :title => "Router Requests"
+    b.value :counter, :title => "Counter"
+    b.value :lines,   :title => "Number of Lines"
+    b.value :bytes,   :title => "Number of Bytes"
+    b.chart :bytes,   :title => "Chart of Bytes", :periods => 10, :width => 3
+    b.map   :places2, :title => "Visitors", :width => 12, :height => 9
   end
 end

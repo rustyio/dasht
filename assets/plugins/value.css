@@ -1,4 +1,4 @@
-.metric-tile .metric {
+.value-tile .value {
     font-family: 'Lato', sans-serif;
     color: rgba(255, 255, 255, 0.9);
     vertical-align: middle;
@@ -10,7 +10,7 @@
 }
 
 @media (max-width: 640px) {
-    .metric-tile .metric {
+    .value-tile .value {
         padding-top: 12px;
         padding-bottom: 12px;
         font-size: 30px;

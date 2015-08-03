@@ -44,11 +44,11 @@ dasht do |d|
 
   # Publish a board.
   d.board do |b|
-    b.metric :counter,  :title => "Counter"
-    b.metric :lines,    :title => "Number of Lines"
-    b.metric :bytes,    :title => "Number of Bytes"
-    b.chart  :bytes,    :title => "Chart of Bytes", :periods => 10
-    b.map    :visitors, :title => "Visitors", :width => 12, :height => 9
+    b.value :counter,  :title => "Counter"
+    b.value :lines,    :title => "Number of Lines"
+    b.value :bytes,    :title => "Number of Bytes"
+    b.chart :bytes,    :title => "Chart of Bytes", :periods => 10
+    b.map   :visitors, :title => "Visitors", :width => 12, :height => 9
   end
 end
 ```
@@ -200,9 +200,34 @@ On the browser side, Dasht tries to make dashboards look nice with minimal effor
 
 ## Tiles
 
-Dasht comes with three types of tiles:
+Dasht comes with a handful of tile types. All tiles respond to the following options:
 
-###
++ `:title` - The title of the tile.
++ `:resolution` - The resolution of the tile. Defaults to the board or instance default. If none specified, defaults to 60, meaning that it will load data for the last minute.
++ `:refresh` - The refresh rate of the tile. Defaults to the board or instance default. If none specified, defaults to 5, meaning that it will load fresh data every 5 seconds.
++ `:width` - The width of the tile, an integer from 1 to 12. Defaults to 3.
++ `:height` - The height of the tile, an integer from 1 to 12. Defaults to 3.
+
+Individual tiles have additional attributes.
+
+### Value Tile
+
+Display a single numeric value.
+
+```ruby
+b.value :my_metric, :title => "My Title"
+```
+
+
+
++ `chart` - Display an unlabeled chart.
++ `map` - Display points on a map based on physical address or ip.
+
+All tiles take the following
+
+Examples:
+
+
 
 ### Custom Tiles
 

@@ -3,8 +3,6 @@ require 'dasht'
 application = ARGV[0]
 
 dasht do |d|
-  d.refresh=1
-
   # Consume Heroku logs.
   d.start "heroku logs --tail --app #{application}"
 
@@ -27,10 +25,10 @@ dasht do |d|
 
   # Publish a board.
   d.board do |b|
-    b.metric :counter,  :title => "Counter"
-    b.metric :lines,    :title => "Number of Lines"
-    b.metric :bytes,    :title => "Number of Bytes"
-    b.chart  :bytes,    :title => "Chart of Bytes", :periods => 10
-    b.map    :visitors, :title => "Visitors", :width => 12, :height => 9
+    b.value :counter,  :title => "Counter"
+    b.value :lines,    :title => "Number of Lines"
+    b.value :bytes,    :title => "Number of Bytes"
+    b.chart :bytes,    :title => "Chart of Bytes", :periods => 10
+    b.map   :visitors, :title => "Visitors", :width => 12, :height => 9
   end
 end
