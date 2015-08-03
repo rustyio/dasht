@@ -1,27 +1,20 @@
 # Dasht
 
-Dasht is a framework for building beautiful ops/developer dashboards. It's especially good for displaying high-level application stats in real-time on a wall-mounted monitor. Dasht is a Ruby / Rack application open-sourced under the MIT license.
+Dasht is a framework for building beautiful, developer-focused application dashboards. Dasht is especially good at displaying high-level application stats in real-time on a wall-mounted monitor.
 
-Dasht works best with a Twelve-Factor (Heroku style) app. Specifically, your app should treat [logs as streams](http://12factor.net/logs). Dasht gathers data from log streams using a regular expression, aggregates the data in a very simple in-memory time series database, then publishes the data (or some form of the data) to tiles on a dashboard. A typical Dasht dashboard takes just a few minutes of coding and is usually less than 100 lines of Ruby.
+Dasht works best with a Twelve-Factor (Heroku style) app. Specifically, your app should treat [logs as streams](http://12factor.net/logs). Dasht gathers data from log streams using a regular expression, aggregates the data in a very simple in-memory time series database, then publishes the data (or some form of the data) to tiles on a dashboard.
 
-[Screen Shot]
+A typical Dasht dashboard takes just a few minutes of coding and is usually less than 100 lines of Ruby.
 
-# Installation
+Dasht is a Ruby / Rack application by [Rusty Klophaus](http://rusty.io), open-sourced under the MIT license.
 
-Getting started with Dasht is easy:
+# Getting Started
 
-```sh
-    # Install the gem.
-    gem install dasht
+Let's make the following dashboard for your Heroku app.
 
-    # Create a dashboard.
-    vi my_dashboard.rb
+![Dasht Screen Shot](screenshot_1.png)
 
-    # Run the dashboard.
-    ruby my_dashboard.rb
-```
-
-Here is a simple dashboard for Heroku apps. Look in **examples** folder for more options.
+First, copy the Ruby code below to a file called `my_dashboard.rb`.
 
 ```ruby
 require 'dasht'
@@ -60,6 +53,24 @@ dasht do |d|
 end
 ```
 
+Then, run the following commands in your shell:
+
+```sh
+# Install the gem.
+gem install dasht
+
+# Create a dashboard.
+vi my_dashboard.rb
+
+# Run the dashboard.
+ruby my_dashboard.rb $APPNAME
+
+# Open the dashboard.
+open http://localhost:8080
+```
+
+Look in **examples** folder for more example dashboards..
+
 # Documentation
 
 ## Injesting Data
@@ -86,9 +97,9 @@ There are a number of pre-defined measure types:
 + `count` - Increment a measure by some amount. (defaults to 1 if no block is provided).
 + `min` - Update the minimum value.
 + `max` - Update the maximum value.
-+ `append` - Keep a list of values of a measure (useful for non-numeric data.)
++ `append` - Create a list of values. Useful for non-numeric data such as geographic locations.
 
-Unless otherwise noted, all measure definitions require a block. The block should a regular expression match into a numeric value. Measures should be kept as simple and compact as possible to keep memory requirements low.
+Unless otherwise noted, all measure definitions require a block. The block should convert the regular expression match into a value. Measures should be kept as simple and compact as possible to keep memory requirements low.
 
 Some examples:
 
@@ -170,6 +181,7 @@ Dasht is also extensible. It ships with three types of plugins ('metric', 'chart
 + DONE - Interval types.
 + DONE - Simplify metric update.
 
++ Rename history to periods.
 + Read data in batches to reduce browser resource usage.
 + Change dashboard color.
 + Load user defined plugins.
