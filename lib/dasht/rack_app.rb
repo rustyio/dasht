@@ -23,7 +23,7 @@ module Dasht
           end
         }
       end
-      Rack::Server.start(:app => app, :Port => port)
+      Rack::Server.start(:app => app, :Port => (port || 8080))
     end
 
     def _call(env)

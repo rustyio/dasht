@@ -49,6 +49,7 @@ module Dasht
             @total_bytes += line.length
             print "\rConsumed #{@total_lines} lines (#{@total_bytes} bytes)..."
             _consume_line(ts, line)
+            _trim_to(ts - (parent.history || 60 * 60))
           end
         rescue => e
           parent.log e
@@ -71,6 +72,12 @@ module Dasht
           parent.log e
           raise e
         end
+      end
+    end
+
+    def _trim_to(ts)
+      @metric_values.each do |k, v|
+        v.trim_to(ts)
       end
     end
   end

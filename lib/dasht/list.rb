@@ -66,6 +66,7 @@ module Dasht
 
     # Public: Remove data up to (but not including) the specified pointer.
     def trim_to(pointer)
+      return if pointer.nil?
       index = _pointer_to_index(pointer)
       @offset += index
       @values = @values.slice(index, @values.length)

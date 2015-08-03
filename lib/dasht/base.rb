@@ -11,6 +11,7 @@ module Dasht
     attr_accessor :default_refresh
     attr_accessor :default_width
     attr_accessor :default_height
+    attr_accessor :history
 
     def initialize
       @boards      = {}
