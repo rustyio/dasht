@@ -41,12 +41,16 @@ module Dasht
 
     ### EVENTS ###
 
-    def event(metric, regex, op = nil, value = nil, options = {}, &block)
-      collector.add_event_definition(metric.to_s, regex, op, value, block)
+    def event(metric, regex, op, value = nil, &block)
+      collector.add_event_definition(metric, regex, op, value, block)
     end
 
     def count(metric, regex, &block)
       event(metric, regex, :dasht_sum, 1, &block)
+    end
+
+    def gauge(metric, regex, &block)
+      event(metric, regex, :last, nil, &block)
     end
 
     def min(metric, regex, &block)
