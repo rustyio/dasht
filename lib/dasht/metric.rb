@@ -1,3 +1,15 @@
+# Dasht::Metric - Simple in-memory time-series data structure with the
+# following properties:
+#
+# 1. Sparse. Only stores time stamps for intervals with known data,
+#    and only stores one timestamp per interval.
+# 2. Flexible aggregation using Ruby blocks during both read and
+#    write.
+# 3. Read values between two timestamps.
+#
+# The Dasht::Metric structure is formed using two Dasht::List
+# objects. One object tracks data, the other object tracks a list of
+# checkpoints and their corresponding index into the data.
 module Dasht
   class Metric
     attr_reader :data, :checkpoints
@@ -10,7 +22,7 @@ module Dasht
     end
 
     def to_s
-      @data.to_s + " (last: #{@last_item})"
+      return @data.to_s + " (last: #{@last_item})"
     end
 
     def append(data, ts, &block)
@@ -29,6 +41,16 @@ module Dasht
       return
     end
 
+    def trim_to(ts)
+      pointer = nil
+      @checkpoints.trim_while do |s, p|
+        pointer = p
+        s < ts
+      end
+      @data.trim_to(pointer)
+      return
+    end
+
     def enum(start_ts, end_ts = nil)
       # Get a pointer to our location in the data.
       start_pointer = nil
@@ -44,7 +66,7 @@ module Dasht
       end_pointer ||= @data.tail_pointer
 
       # Enumerate through the data, then tack on the last item.
-      Enumerator.new do |yielder|
+      return Enumerator.new do |yielder|
         @data.enum(start_pointer, end_pointer).each do |data|
           yielder << data
         end
