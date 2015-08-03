@@ -137,11 +137,15 @@ end
 
 ### Boards
 
+A single Dasht instance can host multiple dashboards. Each dashboard is split into a 12x12 grid;
+
 ### Tiles
 
 ### Custom Tiles
 
 Dasht is also extensible. It ships with three types of plugins ('metric', 'chart, and 'map') that are suitable for most uses. New plugins are fairly easy to write. A simple plugin takes around 30 lines of Javascript.
+
+### Other Settings
 
 
 # TODO
@@ -166,11 +170,12 @@ Dasht is also extensible. It ships with three types of plugins ('metric', 'chart
 + DONE - Interval types.
 + DONE - Simplify metric update.
 
++ Read data in batches to reduce browser resource usage.
 + Change dashboard color.
-+ Load plugins from local file.
++ Load user defined plugins.
 + Remove points from the map.
 + Clear out old stats to free memory.
-+ Fix up scrolling tile.
-+ "Delta" tile. (Up / down X percent.)
-+ Documentation
++ Fix up 'scroll' tile.
++ Create a 'delta' tile. (Up / down X percent.)
+
 + Blog post
