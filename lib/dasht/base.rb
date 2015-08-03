@@ -6,11 +6,11 @@ module Dasht
     attr_accessor :reloader
     attr_accessor :dashboard_builder
     attr_accessor :boards
-    attr_accessor :resolution
-    attr_accessor :refresh
-    attr_accessor :width
-    attr_accessor :height
-    attr_accessor :history
+    attr_accessor :background
+    attr_accessor :default_resolution
+    attr_accessor :default_refresh
+    attr_accessor :default_width
+    attr_accessor :default_height
 
     def initialize
       @boards      = {}

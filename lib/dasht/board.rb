@@ -3,11 +3,11 @@ module Dasht
     attr_accessor :parent
     attr_accessor :name
     attr_accessor :tiles
-    attr_accessor :resolution
-    attr_accessor :refresh
-    attr_accessor :width
-    attr_accessor :height
-    attr_accessor :history
+    attr_accessor :background
+    attr_accessor :default_resolution
+    attr_accessor :default_refresh
+    attr_accessor :default_width
+    attr_accessor :default_height
 
     def initialize(parent, name)
       @parent = parent
@@ -41,11 +41,10 @@ module Dasht
         @tiles << {
           :type       => method,
           :metric     => metric,
-          :resolution => self.resolution || parent.resolution || 60,
-          :refresh    => self.refresh    || parent.refresh    || 5,
-          :width      => self.width      || parent.width      || 3,
-          :height     => self.height     || parent.height     || 3,
-          :history    => self.history    || parent.history    || 1,
+          :resolution => self.default_resolution || parent.default_resolution || 60,
+          :refresh    => self.default_refresh    || parent.default_refresh    || 5,
+          :width      => self.default_width      || parent.default_width      || 3,
+          :height     => self.default_height     || parent.default_height     || 3,
           :extra_args => args
         }.merge(options)
       rescue => e
@@ -62,6 +61,15 @@ module Dasht
         s += "Dasht.add_tile(#{options.to_json});\n"
       end
       s += "});"
+      s += "</script>\n"
+      s
+    end
+
+    def emit_board_js
+      s = "<script>"
+      if background = self.background || parent.background
+        s += "$('body').css('background', #{background.to_json});\n"
+      end
       s += "</script>\n"
       s
     end

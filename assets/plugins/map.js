@@ -82,9 +82,9 @@ Dasht.map_init = function(el, options) {
         {
             featureType: "water",
             stylers: [
-                { hue: "#333333" },
-                { saturation: -100 },
-                { lightness: -60 },
+                { hue: "#ffffff" },
+                { saturation: 80 },
+                { lightness: 100 },
                 { gamma: 0.43 }
             ]
         }

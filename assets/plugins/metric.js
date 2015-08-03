@@ -1,5 +1,5 @@
 Dasht.metric_update = function(el, value) {
-    $(el).css("opacity", 0.8);
+    $(el).css("opacity", 0.7);
     $(el).html(value.toLocaleString());
     $(el).animate({ "opacity": 1.0 });
 }

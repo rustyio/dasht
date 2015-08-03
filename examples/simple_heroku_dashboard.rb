@@ -30,7 +30,7 @@ dasht do |d|
     b.metric :counter,  :title => "Counter"
     b.metric :lines,    :title => "Number of Lines"
     b.metric :bytes,    :title => "Number of Bytes"
-    b.chart  :bytes,    :title => "Chart of Bytes", :history => 10
+    b.chart  :bytes,    :title => "Chart of Bytes", :periods => 10
     b.map    :visitors, :title => "Visitors", :width => 12, :height => 9
   end
 end

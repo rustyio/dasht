@@ -8,7 +8,7 @@ Dasht.chart_init = function(el, options) {
     // Create some empty values.
     var labels = [];
     var data = [];
-    for (var i = 0; i < options.history; i++) {
+    for (var i = 0; i < options.periods; i++) {
         labels.push("");
         data.push(0);
     }
@@ -40,7 +40,7 @@ Dasht.chart_init = function(el, options) {
             if (_.isEqual(old_value, value)) return;
 
             // Update chart values.
-            for (var i = 0; i < options.history; i++) {
+            for (var i = 0; i < options.periods; i++) {
                 chart.datasets[0].points[i].value = value[i];
             }
             chart.update();

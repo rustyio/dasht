@@ -80,9 +80,9 @@ Dasht.scale_fontsize = function() {
 Dasht.get_value = function(options, callback) {
     var metric     = options["metric"];
     var resolution = options["resolution"] || 60;
-    var history    = options["history"]    || 1;
+    var periods    = options["periods"]    || 1;
     var refresh    = options["refresh"]    || 5;
-    var url = "/data/" + options.metric + "/" + options.resolution + "/" + history;
+    var url = "/data/" + options.metric + "/" + options.resolution + "/" + periods;
 
     $.get(url).done(function(value) {
         // Update the UI.

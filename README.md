@@ -47,7 +47,7 @@ dasht do |d|
     b.metric :counter,  :title => "Counter"
     b.metric :lines,    :title => "Number of Lines"
     b.metric :bytes,    :title => "Number of Bytes"
-    b.chart  :bytes,    :title => "Chart of Bytes", :history => 10
+    b.chart  :bytes,    :title => "Chart of Bytes", :periods => 10
     b.map    :visitors, :title => "Visitors", :width => 12, :height => 9
   end
 end
@@ -87,7 +87,7 @@ d.start("heroku logs --tail --app my_application")
 d.tail("/path/to/my_application.log")
 ```
 
-### Measures
+## Measures
 
 Dasht tries to apply each new log line against a series of user-defined regular expressions. When a regular expression matches, the measure is updated based on the measure type..
 
@@ -146,17 +146,69 @@ d.interval :my_metric do
 end
 ```
 
-### Boards
+## Boards
 
-A single Dasht instance can host multiple dashboards. Each dashboard is split into a 12x12 grid;
+A single Dasht instance can host multiple dashboards. Dashboards are defined like this:
 
-### Tiles
+```ruby
+# Publish a board, accessible through "/boards/my_board"
+d.board :my_board do |b|
+  ...
+end
+
+# Publish the default board, accessible through "/"
+d.board do |b|
+  ...
+end
+```
+
+Each dashboard can have a number of different settings, documented below:
+
+```ruby
+d.board do |b|
+  # Set the background color.
+  b.background = "darkorange"
+
+  # Set a background image.
+  b.background = "url(http://path/to/image.png)"
+
+  # Set the default resolution.
+  b.default_resolution = 60
+
+  # Set the default refresh rate.
+  b.default_refresh = 5
+
+  # Set the default tile width.
+  b.default_width = 3
+
+  # Set the default tile height.
+  b.default_height = 3
+
+  # Set the default number of periods.
+  b.default_periods
+end
+```
+Each dashboard can be filled with tiles that display various key metrics about the app. Each dashboard is split into a 12x12 grid. Tiles by default take up a 3x3 spot. This can be adjusted through a per-tile setting.
+
+On the browser side, Dasht tries to make dashboards look nice with minimal effort in the following ways:
+
++ The dashboard itself stretches to fill a full screen for most reasonable monitor sizes, even in portrait orientation.
++ Many tile elements are slightly transparent, so they look nice with any background color or image.
++ Dasht uses [Masonry](http://masonry.desandro.com/) to pack tiles into a reasonably compact and visually pleasing layout.
++ Text is automatically scaled up or down to be as large as possible while still fitting into available space.
++ Dasht is responsive and looks nice on mobile devices and tables. That said, the target platform is a large monitor.
+
+## Tiles
+
+Dasht comes with three types of tiles:
+
+###
 
 ### Custom Tiles
 
 Dasht is also extensible. It ships with three types of plugins ('metric', 'chart, and 'map') that are suitable for most uses. New plugins are fairly easy to write. A simple plugin takes around 30 lines of Javascript.
 
-### Other Settings
+## Other Settings
 
 
 # TODO
@@ -181,7 +233,8 @@ Dasht is also extensible. It ships with three types of plugins ('metric', 'chart
 + DONE - Interval types.
 + DONE - Simplify metric update.
 
-+ Rename history to periods.
+
++ Rename periods to periods.
 + Read data in batches to reduce browser resource usage.
 + Change dashboard color.
 + Load user defined plugins.
