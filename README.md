@@ -14,14 +14,13 @@
 + DONE - Load data right away, don't wait.
 + DONE - Cache IP lookups.
 + DONE - Create a CSS class that causes an element to fill available height.
-
-+ Chart type tile.
-+ Comparison type tile. (Up / down X percent.)
-+ Board level settings for resolution and refresh.
-+ Board level settings for element size.
++ DONE - Chart type tile.
++ DONE - Board level settings for resolution and refresh.
++ DONE - Board level settings for element size.
++ Interval types.
 + Remove points from the map.
 + Clear out old stats to free memory.
 + Fix up scrolling tile.
 + Documentation
 + Blog post
-+ Create a way to queue long running lookups.
++ Change type tile. (Up / down X percent.)

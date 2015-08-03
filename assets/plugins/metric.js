@@ -14,6 +14,7 @@ Dasht.metric_count_up = function(el, start_value, end_value, speed, n) {
 }
 
 Dasht.metric_init = function(el, options) {
+    // Initialize.
     var metric = $(el).find(".metric");
     var metric_el = metric.get()[0];
     var old_value = 0;

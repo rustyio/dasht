@@ -68,6 +68,7 @@ Dasht.map_plot_location = function(map, markers, location) {
 }
 
 Dasht.map_init = function(el, options) {
+    // Initialize.
     var old_value = undefined;
     var styles = [
         {

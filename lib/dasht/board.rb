@@ -3,6 +3,11 @@ module Dasht
     attr_accessor :parent
     attr_accessor :name
     attr_accessor :tiles
+    attr_accessor :resolution
+    attr_accessor :refresh
+    attr_accessor :width
+    attr_accessor :height
+    attr_accessor :history
 
     def initialize(parent, name)
       @parent = parent
@@ -36,11 +41,11 @@ module Dasht
         @tiles << {
           :type       => method,
           :metric     => metric,
-          :resolution => 60,
-          :refresh    => 1,
-          :width      => 3,
-          :height     => 4,
-          :fontsize   => :medium,
+          :resolution => self.resolution || parent.resolution || 60,
+          :refresh    => self.refresh    || parent.refresh    || 5,
+          :width      => self.width      || parent.width      || 3,
+          :height     => self.height     || parent.height     || 3,
+          :history    => self.history    || parent.history    || 1,
           :extra_args => args
         }.merge(options)
       rescue => e
