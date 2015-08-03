@@ -1,16 +1,10 @@
-# TODO
-
-+ Remove points from the map.
-+ Clear out old stats to free memory.
-+ Blog post
-
 # Dasht
 
 Dasht is a framework for building beautiful, developer-focused application dashboards. Dasht is especially good at displaying high-level application stats in real-time on a wall-mounted monitor.
 
 > "You can't manage what you don't measure." - Peter Drucker
 
-Dasht works best with a Twelve-Factor (Heroku style) app. Specifically, your app should treat [logs as streams](http://12factor.net/logs). Dasht gathers data from log streams using a regular expression, aggregates the data in a very simple in-memory time series database, then publishes the data (or some form of the data) to tiles on a dashboard.
+Dasht works best with a Twelve-Factor (Heroku style) app. Specifically, your app should treat [logs as event streams](http://12factor.net/logs). Dasht lets you detect events with regular expressions, turn the events into metrics, then publish the metrics to a dashboard.
 
 A typical Dasht dashboard takes just a few minutes of coding and is usually less than 100 lines of Ruby.
 
@@ -77,9 +71,57 @@ ruby my_dashboard.rb $APPNAME
 open http://localhost:8080
 ```
 
-Look in **examples** folder for more example dashboards..
+Look in the [examples](https://github.com/rustyio/dasht/tree/master/examples) folder for more example dashboards..
 
 # Documentation
+
+## Creating a Dasht Instance
+
+To create a Dasht instance, simply require the library and then call the global `dasht` method with a block.
+
+```ruby
+require 'dasht'
+
+dasht do |d|
+  # ...Your metrics and dashboards...
+end
+```
+
+There are a number of global settings that can be specified at the instance level, with their corresponding defaults:
+
+```ruby
+dasht do |d|
+  # Set the web port.
+  b.port = 8080
+
+  # Set the amount of history to keep.
+  b.history = 60 * 60
+
+  # Set a background color.
+  b.background = "#334455"
+
+  # Or, set a background image.
+  # b.background = "url(http://path/to/image.png)"
+
+  # Set the default resolution.
+  b.default_resolution = 60
+
+  # Set the default refresh rate.
+  b.default_refresh = 5
+
+  # Set the default tile width.
+  b.default_width = 3
+
+  # Set the default tile height.
+  b.default_height = 3
+
+  # Set the default number of periods.
+  b.default_periods
+
+  # ...Your metrics and dashboards...
+end
+```
+
 
 ## Injesting Data
 
@@ -131,7 +173,7 @@ d.append :visitors, /Started GET .* for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
 end
 ```
 
-You can also define your own metric types with the `event` command. The `op` parameter is any Array instance method. Money patching can come in handy if the built-in Array methods don't do what you need.
+You can also define your own metric types with the `event` command. The `op` parameter is a symbol referring to any [Array](http://ruby-doc.org/core-2.2.0/Array.html) instance method. If the built-in Array methods don't do what you need, you can monkey-patch the array class to add new methods.
 
 ```ruby
 # Format is d.event(metric, regex, op, &block). The definition below
@@ -170,15 +212,15 @@ d.board do |b|
 end
 ```
 
-Each dashboard can have a number of different settings, documented below:
+Each dashboard can have a number of different settings, documented below with their corresponding defaults:
 
 ```ruby
 d.board do |b|
   # Set a background color.
-  b.background = "darkorange"
+  b.background = "#334455"
 
   # Or, set a background image.
-  b.background = "url(http://path/to/image.png)"
+  # b.background = "url(http://path/to/image.png)"
 
   # Set the default resolution.
   b.default_resolution = 60
@@ -198,7 +240,7 @@ end
 ```
 Each dashboard can be filled with tiles that display various key metrics about the app. Each dashboard is split into a 12x12 grid. Tiles by default take up a 3x3 spot. The height and width of each tile can be adjusted with a per-tile setting.
 
-On the browser side, Dasht tries to make dashboards look nice with minimal effort in the following ways:
+Dasht tries to make dashboards look nice with minimal effort in the following ways:
 
 + The dashboard itself gracefully stretches to fill the entire screen for most reasonable monitor sizes, even in portrait orientation.
 + Tile elements are designed to be slightly transparent, so they look nice with any background color or image.
@@ -208,7 +250,9 @@ On the browser side, Dasht tries to make dashboards look nice with minimal effor
 
 ## Tiles
 
-Dasht comes with a handful of tile types. All tiles respond to the following options:
+Metrics can be published by placing tiles on a dashboard. Dasht comes with a handful of tile types.
+
+All tiles respond to the following options:
 
 + `:title` - The title of the tile.
 + `:resolution` - The resolution of the tile. Defaults to the board or instance default. If none specified, defaults to 60, meaning that it will load data for the last minute.
@@ -217,6 +261,8 @@ Dasht comes with a handful of tile types. All tiles respond to the following opt
 + `:height` - The height of the tile, an integer from 1 to 12. Defaults to 3.
 
 Individual tiles have additional attributes.
+
+Dasht is extensible. New tiles are relatively easy to write. A simple tile plugin takes around 30 lines of Javascript. See the [existing plugins](https://github.com/rustyio/dasht/tree/master/assets/plugins) for examples.
 
 ### Value Tile
 
@@ -241,10 +287,6 @@ Show a simple line chart of the metric. This will display the value of the metri
 ```ruby
 b.chart :my_metric, :title => "My Title", :periods => 10
 ```
-
-### Custom Tiles
-
-New plugins are fairly easy to write. A simple plugin takes around 30 lines of Javascript. See existing plugins for examples.
 
 ### A Tile With Many Settings
 
