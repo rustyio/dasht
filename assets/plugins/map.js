@@ -4,19 +4,16 @@ Dasht.map_plot_address = function(map, markers, geocoder, address) {
     // Maybe pull the location from cache.
     var location;
     if (location = Dasht.map_geocoder_cache[address]) {
-        Dasht.map_plot_location(map, markers, location);
+        Dasht.map_plot_location(map, markers, address, location);
         return;
     }
 
     geocoder.geocode({ "address": address }, function(results, status) {
         // Don't plot if the lookup failed.
         if (status != google.maps.GeocoderStatus.OK) return;
-
-        // Don't plot a location we've already plotted.
         var location = results[0].geometry.location;
         Dasht.map_geocoder_cache[address] = location;
-
-        Dasht.map_plot_location(map, markers, location);
+        Dasht.map_plot_location(map, markers, address, location);
     });
 }
 
@@ -24,7 +21,7 @@ Dasht.map_plot_ip = function(map, markers, ip) {
     // Maybe pull the location from cache.
     var location;
     if (location = Dasht.map_geocoder_cache[ip]) {
-        Dasht.map_plot_location(map, markers, location);
+        Dasht.map_plot_location(map, markers, ip, location);
         return;
     }
 
@@ -36,7 +33,7 @@ Dasht.map_plot_ip = function(map, markers, ip) {
         success: function(response) {
             var location = new google.maps.LatLng(response.latitude, response.longitude);
             Dasht.map_geocoder_cache[ip] = location;
-            Dasht.map_plot_location(map, markers, location);
+            Dasht.map_plot_location(map, markers, ip, location);
         },
         error: function (xhr, ajaxOptions, thrownError) {
             alert("Failed!");
@@ -44,9 +41,9 @@ Dasht.map_plot_ip = function(map, markers, ip) {
     });
 }
 
-Dasht.map_plot_location = function(map, markers, location) {
-    var location_exists = _.any(markers, function(value) {
-        return _.isEqual(value.position, location);
+Dasht.map_plot_location = function(map, markers, address_or_ip, location) {
+    var location_exists = _.any(_.values(markers), function(marker) {
+        return _.isEqual(marker.position, location);
     });
     if (location_exists) return;
 
@@ -57,14 +54,8 @@ Dasht.map_plot_location = function(map, markers, location) {
         position: location
     });
 
-    // Track the pin.
-    markers.push(marker);
-
-    // // Trim old pins.
-    // while (markers.length > num_entries) {
-    //     var marker = markers.shift();
-    //     marker.setMap(null);
-    // }
+    // Keep track of markers.
+    markers[address_or_ip] = marker;
 }
 
 Dasht.map_init = function(el, options) {
@@ -100,7 +91,7 @@ Dasht.map_init = function(el, options) {
     var map_el = $(el).find(".map").get()[0];
     var num_entries = options["n"] || 10;
     var map = new google.maps.Map(map_el, mapOptions);
-    window.markers = [];
+    var markers = {};
     var geocoder = new google.maps.Geocoder();
     var ip_regex = /\d+\.\d+\.\d+\.\d+/;
 
@@ -111,6 +102,13 @@ Dasht.map_init = function(el, options) {
         Dasht.get_value(options, function(new_data) {
             new_data = new_data[0];
             if (_.isEqual(old_data, new_data)) return;
+
+            // Remove old markers.
+            var old_markers = _.difference(_.keys(markers), new_data);
+            _.each(old_markers, function(address) {
+                markers[address].setMap(null);
+                delete markers[address];
+            });
 
             // Plot each marker.
             _.each(new_data, function(item, index) {
