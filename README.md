@@ -1,6 +1,14 @@
+# TODO
+
++ Remove points from the map.
++ Clear out old stats to free memory.
++ Blog post
+
 # Dasht
 
 Dasht is a framework for building beautiful, developer-focused application dashboards. Dasht is especially good at displaying high-level application stats in real-time on a wall-mounted monitor.
+
+> "You can't manage what you don't measure." - Peter Drucker
 
 Dasht works best with a Twelve-Factor (Heroku style) app. Specifically, your app should treat [logs as streams](http://12factor.net/logs). Dasht gathers data from log streams using a regular expression, aggregates the data in a very simple in-memory time series database, then publishes the data (or some form of the data) to tiles on a dashboard.
 
@@ -87,19 +95,19 @@ d.start("heroku logs --tail --app my_application")
 d.tail("/path/to/my_application.log")
 ```
 
-## Measures
+## Metrics
 
-Dasht tries to apply each new log line against a series of user-defined regular expressions. When a regular expression matches, the measure is updated based on the measure type..
+Dasht tries to apply each new log line against a series of user-defined regular expressions. When a regular expression matches, Dasht updates the corresponding metric.
 
-There are a number of pre-defined measure types:
+There are a number of pre-defined metric types:
 
-+ `gauge` - Set a measure.
-+ `count` - Increment a measure by some amount. (defaults to 1 if no block is provided).
++ `gauge` - Set a metric.
++ `count` - Increment a metric by some amount. (defaults to 1 if no block is provided).
 + `min` - Update the minimum value.
 + `max` - Update the maximum value.
 + `append` - Create a list of values. Useful for non-numeric data such as geographic locations.
 
-Unless otherwise noted, all measure definitions require a block. The block should convert the regular expression match into a value. Measures should be kept as simple and compact as possible to keep memory requirements low.
+Unless otherwise noted, all metric definitions require a block. The block should convert the regular expression match into a value. Metrics should be kept as simple and compact as possible to keep memory requirements low. (Dasht uses an extremely simple structure to store time-series data. It doesn't go to great lengths to be especially resource efficient.)
 
 Some examples:
 
@@ -123,21 +131,21 @@ d.append :visitors, /Started GET .* for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
 end
 ```
 
-You can also define your own measure types with the `event` command. The `op` parameter is any Array instance method. Money patching can come in handy if the built-in Array methods don't do what you need.
+You can also define your own metric types with the `event` command. The `op` parameter is any Array instance method. Money patching can come in handy if the built-in Array methods don't do what you need.
 
 ```ruby
 # Format is d.event(metric, regex, op, &block). The definition below
-# would set the measure to the first occurance of some measure value
+# would set the metric to the first occurance of some metric value
 # for a given timeframe.
 d.event(:my_metric, /some-regex/, :first) do |match|
   match[1].to_i
 end
 ```
 
-Dasht has one more measure type, an interval type meant for querying external data sources on a regular schedule.
+Dasht has one more metric type, an interval type meant for querying external data sources on a regular schedule.
 
 ```ruby
-# Query external data. Acts as a gauge, and sets the measure to the
+# Query external data. Acts as a gauge, and sets the metric to the
 # return value of the block.
 d.interval :my_metric do
   sleep 5
@@ -166,10 +174,10 @@ Each dashboard can have a number of different settings, documented below:
 
 ```ruby
 d.board do |b|
-  # Set the background color.
+  # Set a background color.
   b.background = "darkorange"
 
-  # Set a background image.
+  # Or, set a background image.
   b.background = "url(http://path/to/image.png)"
 
   # Set the default resolution.
@@ -188,12 +196,12 @@ d.board do |b|
   b.default_periods
 end
 ```
-Each dashboard can be filled with tiles that display various key metrics about the app. Each dashboard is split into a 12x12 grid. Tiles by default take up a 3x3 spot. This can be adjusted through a per-tile setting.
+Each dashboard can be filled with tiles that display various key metrics about the app. Each dashboard is split into a 12x12 grid. Tiles by default take up a 3x3 spot. The height and width of each tile can be adjusted with a per-tile setting.
 
 On the browser side, Dasht tries to make dashboards look nice with minimal effort in the following ways:
 
-+ The dashboard itself stretches to fill a full screen for most reasonable monitor sizes, even in portrait orientation.
-+ Many tile elements are slightly transparent, so they look nice with any background color or image.
++ The dashboard itself gracefully stretches to fill the entire screen for most reasonable monitor sizes, even in portrait orientation.
++ Tile elements are designed to be slightly transparent, so they look nice with any background color or image.
 + Dasht uses [Masonry](http://masonry.desandro.com/) to pack tiles into a reasonably compact and visually pleasing layout.
 + Text is automatically scaled up or down to be as large as possible while still fitting into available space.
 + Dasht is responsive and looks nice on mobile devices and tables. That said, the target platform is a large monitor.
@@ -218,54 +226,56 @@ Display a single numeric value.
 b.value :my_metric, :title => "My Title"
 ```
 
+### Map Tile
 
+Drop pins on a map corresponding to either a physical addresses ("123 Main Street...") or an IP address ("216.58.217.142"). The metric attached to the map should use the `append` metric type, and the block should return the address string. See `examples/simple_heroku_dashboard.rb` for an example.
 
-+ `chart` - Display an unlabeled chart.
-+ `map` - Display points on a map based on physical address or ip.
+```ruby
+b.map :visitors, :title => "Visitors"
+```
 
-All tiles take the following
+### Chart Tile
 
-Examples:
+Show a simple line chart of the metric. This will display the value of the metric for a number of periods in history. For example, if the resolution is 60, and periods is set to 10, then the chart will show the last rolling 10 minutes of history.
 
-
+```ruby
+b.chart :my_metric, :title => "My Title", :periods => 10
+```
 
 ### Custom Tiles
 
-Dasht is also extensible. It ships with three types of plugins ('metric', 'chart, and 'map') that are suitable for most uses. New plugins are fairly easy to write. A simple plugin takes around 30 lines of Javascript.
+New plugins are fairly easy to write. A simple plugin takes around 30 lines of Javascript. See existing plugins for examples.
 
-## Other Settings
+### A Tile With Many Settings
 
+Here is how other settings are set.
 
-# TODO
+```ruby
+b.value :my_metric, :title => "My Title",
+        :resolution => 10, :refresh => 1, :width => 6, :height => 2
+```
 
-+ DONE - Fix responsiveness.
-+ DONE - Fix exception logging.
-+ DONE - Automatically reduce font for value fields.
-+ DONE - Count up with more resource efficiency.
-+ DONE - Rename value to metric.
-+ DONE - Convert plugins to Dasht namespace.
-+ DONE - Custom map css.
-+ DONE - Update map to look up by things other than email address.
-+ DONE - Change layout to 12 * 12 grid.
-+ DONE - Convert map to do IP lookups on client side.
-+ DONE - Support for reading multiple groups of data.
-+ DONE - Load data right away, don't wait.
-+ DONE - Cache IP lookups.
-+ DONE - Create a CSS class that causes an element to fill available height.
-+ DONE - Chart type tile.
-+ DONE - Board level settings for resolution and refresh.
-+ DONE - Board level settings for element size.
-+ DONE - Interval types.
-+ DONE - Simplify metric update.
+# Future Plans
 
+A bucket of ideas for the future:
 
-+ Rename periods to periods.
-+ Read data in batches to reduce browser resource usage.
-+ Change dashboard color.
-+ Load user defined plugins.
-+ Remove points from the map.
-+ Clear out old stats to free memory.
 + Fix up 'scroll' tile.
 + Create a 'delta' tile. (Up / down X percent.)
++ Read data in batches to reduce browser resource usage.
++ Load user defined plugins.
 
-+ Blog post
+# Contributing
+
+To contribute, please create a pull request with a good description and either a unit test or a sample dashboard that exercises the new feature.
+
+# License
+
+The MIT License (MIT)
+
+Copyright (c) 2015 Rusty Klophaus
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
