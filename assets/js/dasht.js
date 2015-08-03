@@ -77,7 +77,7 @@ Dasht.scale_fontsize = function() {
 }
 
 
-Dasht.update_metric = function(options, callback) {
+Dasht.get_value = function(options, callback) {
     var metric     = options["metric"];
     var resolution = options["resolution"] || 60;
     var history    = options["history"]    || 1;
@@ -89,7 +89,7 @@ Dasht.update_metric = function(options, callback) {
         callback(value);
 
         setTimeout(function() {
-            Dasht.update_metric(options, callback);
+            Dasht.get_value(options, callback);
         }, refresh * 1000);
     });
 }

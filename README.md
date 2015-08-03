@@ -17,7 +17,9 @@
 + DONE - Chart type tile.
 + DONE - Board level settings for resolution and refresh.
 + DONE - Board level settings for element size.
-+ Interval types.
++ DONE - Interval types.
++ DONE - Simplify metric update.
+
 + Remove points from the map.
 + Clear out old stats to free memory.
 + Fix up scrolling tile.

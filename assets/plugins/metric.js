@@ -1,16 +1,7 @@
-Dasht.metric_count_up = function(el, start_value, end_value, speed, n) {
-    var i = 0;
-    var step = Math.floor((end_value - start_value) / n);
-    var timeout = setInterval(function() {
-        if (i < (n - 1)) {
-            start_value += step;
-            i += 1;
-            $(el).html(start_value.toLocaleString());
-        } else {
-            $(el).html(end_value.toLocaleString());
-            clearTimeout(timeout);
-        }
-    }, (speed / (n - 1)));
+Dasht.metric_update = function(el, value) {
+    $(el).css("opacity", 0.8);
+    $(el).html(value.toLocaleString());
+    $(el).animate({ "opacity": 1.0 });
 }
 
 Dasht.metric_init = function(el, options) {
@@ -25,10 +16,10 @@ Dasht.metric_init = function(el, options) {
 
     // Update values.
     setTimeout(function() {
-        Dasht.update_metric(options, function(value) {
+        Dasht.get_value(options, function(value) {
             value = value[0];
             if (_.isEqual(old_value, value)) return;
-            Dasht.metric_count_up(metric, old_value, value, options.refresh * 1000, options.refresh * 10);
+            Dasht.metric_update(metric, value);
             old_value = value;
         });
     }, 1000);

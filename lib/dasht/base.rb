@@ -61,6 +61,20 @@ module Dasht
       event(metric, regex, :to_a, nil, &block)
     end
 
+    def interval(metric, &block)
+      Thread.new do
+        begin
+          while true
+            value = block.call
+            set(metric, value, :last) if value
+          end
+        rescue => e
+          log e
+          raise e
+        end
+      end
+    end
+
     ### DASHBOARD ###
 
     def views_path

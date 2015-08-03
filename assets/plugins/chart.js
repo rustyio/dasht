@@ -36,9 +36,7 @@ Dasht.chart_init = function(el, options) {
 
     // Handle value updates.
     setTimeout(function() {
-        Dasht.update_metric(options, function(value) {
-            console.log(value);
-            console.log(options);
+        Dasht.get_value(options, function(value) {
             if (_.isEqual(old_value, value)) return;
 
             // Update chart values.

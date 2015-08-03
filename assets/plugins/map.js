@@ -108,7 +108,7 @@ Dasht.map_init = function(el, options) {
 
     // Update values.
     setTimeout(function() {
-        Dasht.update_metric(options, function(value) {
+        Dasht.get_value(options, function(value) {
             value = value[0];
             if (_.isEqual(old_value, value)) return;
 

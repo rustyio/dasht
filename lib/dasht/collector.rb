@@ -24,6 +24,7 @@ module Dasht
     end
 
     def set(metric, value, op, ts)
+      metric = metric.to_s
       @metric_operations[metric] = op
       m = (@metric_values[metric] ||= Metric.new)
       m.append(value, ts) do |old_value, new_value|
@@ -32,6 +33,7 @@ module Dasht
     end
 
     def get(metric, start_ts, end_ts)
+      metric = metric.to_s
       m = @metric_values[metric]
       return [] if m.nil?
       op = @metric_operations[metric]
