@@ -3,6 +3,7 @@ Dasht = new function(){
     this.fontsize_small  = 12;
     this.fontsize_medium = 30;
     this.fontsize_large  = 80;
+    this.pending_requests = [];
 }();
 
 Dasht.add_tile = function(options) {
@@ -30,7 +31,8 @@ Dasht.init = function() {
         });
     }
 
-    setInterval(Dasht.scale_fontsize, 1000);
+    Dasht.scale_fontsize_loop();
+    Dasht.process_pending_requests_loop();
 }
 
 Dasht.fill_tile = function(el) {
@@ -70,26 +72,65 @@ Dasht._scale_fontsize = function(selector, size, min_size, max_size) {
     return size;
 }
 
-Dasht.scale_fontsize = function() {
+Dasht.scale_fontsize_loop = function() {
     Dasht.fontsize_small  = Dasht._scale_fontsize(".fontsize-small", Dasht.fontsize_small, 10, 20);
     Dasht.fontsize_medium = Dasht._scale_fontsize(".fontsize-medium", Dasht.fontsize_medium, 25, 45);
     Dasht.fontsize_large  = Dasht._scale_fontsize(".fontsize-large", Dasht.fontsize_large, 55, 90);
+    setTimeout(Dasht.scale_fontsize_loop, 1000);
 }
 
-
 Dasht.get_value = function(options, callback) {
-    var metric     = options["metric"];
-    var resolution = options["resolution"] || 60;
-    var periods    = options["periods"]    || 1;
-    var refresh    = options["refresh"]    || 5;
-    var url = "/data/" + options.metric + "/" + options.resolution + "/" + periods;
+    // Add to the list of pending requests.
+    Dasht.pending_requests.push({
+        metric:     options["metric"],
+        resolution: options["resolution"] || 60,
+        periods:    options["periods"]    || 1,
+        refresh:    options["refresh"]    || 5,
+        callback:   callback
+    });
+}
 
-    $.get(url).done(function(value) {
-        // Update the UI.
-        callback(value);
+Dasht.process_pending_requests_loop = function() {
+    // Nothing to do. Return.
+    if (Dasht.pending_requests.length == 0) {
+        setTimeout(Dasht.process_pending_requests_loop, 500);
+        return;
+    }
 
-        setTimeout(function() {
-            Dasht.get_value(options, callback);
-        }, refresh * 1000);
+    // Split pending_requests into query data and callback data.
+    var queries = [];
+    var callbacks = [];
+    _.each(Dasht.pending_requests, function(o) {
+        callbacks.push(o.callback);
+        delete o.callback;
+        queries.push(o);
+    });
+    Dasht.pending_requests = [];
+
+    var successFN = function(responses) {
+        $("body").removeClass("waiting");
+
+        // Process the responses.
+        _.each(responses, function(response, i) {
+            var query    = queries[i];
+            var callback = callbacks[i];
+            callback(response);
+            setTimeout(function() {
+                Dasht.get_value(query, callback);
+            }, query.refresh * 1000);
+        });
+
+        // Loop.
+        setTimeout(Dasht.process_pending_requests_loop, 500);
+    }
+
+    // Perform the request.
+    $("body").addClass("waiting");
+    $.ajax({
+        url: "/data",
+        type: 'post',
+        dataType: 'json',
+        data: JSON.stringify(queries),
+        success: successFN
     });
 }

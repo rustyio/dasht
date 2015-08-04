@@ -16,11 +16,11 @@ dasht do |d|
     "#{match[1]} #{match[2]}"
   end
 
-  d.append :places, /"lead_property_address"=>"([^"]+)"/ do |matches|
+  d.unique :places, /"lead_property_address"=>"([^"]+)"/ do |matches|
     matches[1]
   end
 
-  d.append :places2, /for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
+  d.unique :places2, /for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
     matches[1]
   end
 
@@ -32,6 +32,7 @@ dasht do |d|
 
   # Publish a board.
   d.board do |b|
+    b.default_refresh = 10
     b.value :counter, :title => "Counter"
     b.value :lines,   :title => "Number of Lines"
     b.value :bytes,   :title => "Number of Bytes"

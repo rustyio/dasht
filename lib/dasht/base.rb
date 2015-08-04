@@ -66,6 +66,10 @@ module Dasht
       event(metric, regex, :to_a, nil, &block)
     end
 
+    def unique(metric, regex, &block)
+      event(metric, regex, :uniq, nil, &block)
+    end
+
     def interval(metric, &block)
       Thread.new do
         begin

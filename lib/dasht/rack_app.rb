@@ -40,6 +40,22 @@ module Dasht
         end
       end
 
+      /^\/data$/.match(env["REQUEST_PATH"]) do |match|
+        queries = JSON.parse(env['rack.input'].gets)
+        now = Time.now.to_i
+        data = queries.map do |query|
+          metric     = query["metric"]
+          resolution = query["resolution"]
+          periods    = query["periods"]
+          ts = now - (resolution * periods)
+          (1..periods).map do |n|
+            parent.collector.get(metric, ts, ts += resolution) || 0
+          end
+        end
+
+        return ['200', {'Content-Type' => 'application/json'}, [data.to_json]]
+      end
+
       /^\/data\/(.+)/.match(env["REQUEST_PATH"]) do |match|
         parts = match[1].split('/')
         metric     = parts.shift
