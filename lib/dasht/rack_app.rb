@@ -49,7 +49,7 @@ module Dasht
           periods    = query["periods"]
           ts = now - (resolution * periods)
           (1..periods).map do |n|
-            parent.collector.get(metric, ts, ts += resolution) || 0
+            parent.metrics.get(metric, ts, ts += resolution) || 0
           end
         end
 
@@ -63,7 +63,7 @@ module Dasht
         periods    = (parts.shift || 1).to_i
         ts = Time.now.to_i - (resolution * periods)
         data = (1..periods).map do |n|
-          parent.collector.get(metric, ts, ts += resolution) || 0
+          parent.metrics.get(metric, ts, ts += resolution) || 0
         end
         return ['200', {'Content-Type' => 'application/json'}, [data.to_json]]
       end

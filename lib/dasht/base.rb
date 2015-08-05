@@ -1,11 +1,12 @@
 module Dasht
   class Base
-    attr_accessor :port
-    attr_accessor :collector
+    attr_accessor :metrics
     attr_accessor :rack_app
     attr_accessor :reloader
-    attr_accessor :dashboard_builder
     attr_accessor :boards
+
+    # Settings.
+    attr_accessor :port
     attr_accessor :background
     attr_accessor :default_resolution
     attr_accessor :default_refresh
@@ -16,58 +17,30 @@ module Dasht
     def initialize
       @boards      = {}
       @log_threads = {}
-      @collector   = Collector.new(self)
+      @metrics     = Metrics.new(self)
       @reloader    = Reloader.new(self)
       @rack_app    = RackApp.new(self)
     end
 
     def log(s)
       if s.class < Exception
-        print "\r#{s}\n"
+        print "\n#{s}\n"
         print s.backtrace.join("\n")
       else
         print "\r#{s}\n"
       end
     end
 
-    ### COLLECTOR ###
+    ### DATA INGESTION ###
 
-    def set(metric, value, op = :last)
-      collector.set(metric, value, op, Time.now.to_i)
+    def start(command, &block)
+      log_thread = @log_threads[command] = LogThread.new(self, command)
+      yield(log_thread) if block
+      log_thread
     end
 
-    def get(metric, resolution = 60)
-      collector.get(metric, resolution)
-    end
-
-    ### EVENTS ###
-
-    def event(metric, regex, op, value = nil, &block)
-      collector.add_event_definition(metric, regex, op, value, block)
-    end
-
-    def count(metric, regex, &block)
-      event(metric, regex, :dasht_sum, 1, &block)
-    end
-
-    def gauge(metric, regex, &block)
-      event(metric, regex, :last, nil, &block)
-    end
-
-    def min(metric, regex, &block)
-      event(metric, regex, :min, nil, &block)
-    end
-
-    def max(metric, regex, &block)
-      event(metric, regex, :max, nil, &block)
-    end
-
-    def append(metric, regex, &block)
-      event(metric, regex, :to_a, nil, &block)
-    end
-
-    def unique(metric, regex, &block)
-      event(metric, regex, :uniq, nil, &block)
+    def tail(path)
+      start("tail -F -n 0 \"#{path}\"")
     end
 
     def interval(metric, &block)
@@ -101,20 +74,8 @@ module Dasht
     def board(name = "default", &block)
       name = name.to_s
       board = @boards[name] = Board.new(self, name)
-      yield(b) if block
+      yield(board) if block
       board
-    end
-
-    ### LOG THREADS ###
-
-    def start(command, &block)
-      log_thread = @log_threads[command] = LogThread.new(self, command)
-      yield(log_thread) if block
-      log_thread
-    end
-
-    def tail(path)
-      start("tail -F -n 0 \"#{path}\"")
     end
 
     ### RUN & RELOAD ###
@@ -130,7 +91,6 @@ module Dasht
       end
 
       @already_running = true
-      @collector.run
       @reloader.run
 
       block.call(self)
@@ -140,7 +100,6 @@ module Dasht
     end
 
     def reload(&block)
-      @collector.reset_event_definitions
       @boards = {}
       @log_threads.values.map(&:terminate)
       @log_threads = {}
