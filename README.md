@@ -1,3 +1,9 @@
+# TODO
+
++ Ditch masonry, add containers.
++ Filter metric counts by source.
++ Hide the title.
+
 # Dasht
 
 Dasht is a framework for building beautiful, developer-focused application dashboards. Dasht is especially good at displaying high-level application stats in real-time on a wall-mounted monitor.

@@ -84,8 +84,8 @@ Dasht.map_init = function(el, options) {
     var mapOptions = {
         zoom: 4,
         center: new google.maps.LatLng(39.8282, -98.5795),
-        styles: styles,
-        disableDefaultUI: true
+        styles: styles
+        // disableDefaultUI: true
     };
 
     var map_el = $(el).find(".map").get()[0];

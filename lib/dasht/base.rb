@@ -98,11 +98,11 @@ module Dasht
       File.join(File.dirname($PROGRAM_NAME), "plugins")
     end
 
-    def board(name = "default")
+    def board(name = "default", &block)
       name = name.to_s
-      @boards[name] = Board.new(self, name).tap do |b|
-        yield(b)
-      end
+      board = @boards[name] = Board.new(self, name)
+      yield(b) if block
+      board
     end
 
     ### LOG THREADS ###

@@ -15,7 +15,7 @@ module Dasht
       @line_queue.push([ts, line])
     end
 
-    def add_event_definition(metric, regex, op, value, block)
+    def add_event_definition(, metric, regex, op, value, block)
       @event_definitions << [metric, regex, op, value, block]
     end
 

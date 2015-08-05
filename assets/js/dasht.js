@@ -25,21 +25,26 @@ Dasht.add_tile = function(options) {
 }
 
 Dasht.init = function() {
-    if ($(document).width() > 640) {
-        $('#container').masonry({
-            itemSelector: '.tile'
-        });
-    }
+    // if ($(document).width() > 640) {
+    //     $('#container').masonry({
+    //         itemSelector: '.tile'
+    //     });
+    // }
 
     Dasht.scale_fontsize_loop();
     Dasht.process_pending_requests_loop();
 }
 
-Dasht.fill_tile = function(el) {
+Dasht.fill_tile = function(el, do_width = true, do_height = true) {
     var parent = $(el).parent();
-    $(el).outerHeight(parent.height() - parent.find(".title").outerHeight(true));
+    if (do_width) {
     var marginsize = parseInt($(el).css("margin-left")) + parseInt($(el).css("margin-right"));
-    $(el).outerWidth(parent.width() - marginsize);
+        $(el).outerWidth(parent.width() - marginsize);
+    }
+    if (do_height) {
+        var marginsize = parseInt($(el).css("margin-top")) + parseInt($(el).css("margin-bottom"));
+        $(el).outerHeight(parent.height() - marginsize);
+    }
 }
 
 Dasht._scale_fontsize = function(selector, size, min_size, max_size) {

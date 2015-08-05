@@ -8,11 +8,11 @@ Dasht.value_init = function(el, options) {
     // Initialize.
     var value = $(el).find(".value");
     var value_el = value.get()[0];
-    var old_data = 0;
+    var old_data = undefined;
 
     // Set the value height to be tile height minus title height.
+    Dasht.fill_tile($(el).find(".title"), true, false);
     Dasht.fill_tile(value);
-    value.css("line-height", value.innerHeight() + "px");
 
     // Update values.
     setTimeout(function() {
