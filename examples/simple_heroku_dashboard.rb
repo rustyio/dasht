@@ -4,17 +4,17 @@ application = ARGV[0]
 
 dasht do |d|
   # Consume Heroku logs.
-  d.start "heroku logs --tail --app #{application}"
+  d.start "heroku logs --tail --app #{application}" do |l|
+    # Track some metrics.
+    l.count :lines, /.+/
 
-  # Track some metrics.
-  d.count :lines, /.+/
+    l.count :bytes, /.+/ do |match|
+      match[0].length
+    end
 
-  d.count :bytes, /.+/ do |match|
-    match[0].length
-  end
-
-  d.append :visitors, /Started GET .* for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
-    matches[1]
+    l.append :visitors, /Started GET .* for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
+      matches[1]
+    end
   end
 
   counter = 0

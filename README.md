@@ -25,17 +25,17 @@ application = ARGV[0]
 
 dasht do |d|
   # Consume Heroku logs.
-  d.start "heroku logs --tail --app #{application}"
+  d.start "heroku logs --tail --app #{application}" do |l|
+    # Track some metrics.
+    d.count :lines, /.+/
 
-  # Track some metrics.
-  d.count :lines, /.+/
+    d.count :bytes, /.+/ do |match|
+      match[0].length
+    end
 
-  d.count :bytes, /.+/ do |match|
-    match[0].length
-  end
-
-  d.append :visitors, /for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
-    matches[1]
+    d.append :visitors, /for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
+      matches[1]
+    end
   end
 
   counter = 0
@@ -131,10 +131,26 @@ Some examples:
 
 ```ruby
 # Start a command, process the output.
-d.start("heroku logs --tail --app my_application")
+d.start("heroku logs --tail --app my_application") do |l|
+  ...
+end
 
 # Tail a file, process the new data.
-d.tail("/path/to/my_application.log")
+d.tail("/path/to/my_application.log") do |l|
+  ...
+end
+```
+
+There is also an interval type meant for querying external data sources. It simply runs in a loop. Remember to include a `sleep` statement!.
+
+```ruby
+# Query external data. Acts as a gauge, and sets the metric to the
+# return value of the block.
+d.interval :my_metric do
+  sleep 5
+  hash = JSON.parse(Net::HTTP.get("http://website/some/api.json"))
+  hash["value"]
+end
 ```
 
 ## Metrics
@@ -154,22 +170,24 @@ Unless otherwise noted, all metric definitions require a block. The block should
 Some examples:
 
 ```ruby
-# Track the total number of log lines processed.
-d.count :lines, /.+/
+d.start "some command" do |l|
+  # Track the total number of log lines processed.
+  l.count :lines, /.+/
 
-# Track the total size of the logs, in bytes.
-d.count :bytes, /.+/ do |match|
-  match[0].length
-end
+  # Track the total size of the logs, in bytes.
+  l.count :bytes, /.+/ do |match|
+    match[0].length
+  end
 
-# Track the maximum response time.
-d.max :max_response, /Completed 200 OK in (\d+)ms/ do |match|
-  match[1].to_i
-end
+  # Track the maximum response time.
+  l.max :max_response, /Completed 200 OK in (\d+)ms/ do |match|
+    match[1].to_i
+  end
 
-# Track visitor IP addresses.
-d.append :visitors, /Started GET .* for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
-  matches[1]
+  # Track visitor IP addresses.
+  l.append :visitors, /Started GET .* for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
+    matches[1]
+  end
 end
 ```
 
@@ -179,20 +197,8 @@ You can also define your own metric types with the `event` command. The `op` par
 # Format is d.event(metric, regex, op, &block). The definition below
 # would set the metric to the first occurance of some metric value
 # for a given timeframe.
-d.event(:my_metric, /some-regex/, :first) do |match|
+l.event(:my_metric, /some-regex/, :first) do |match|
   match[1].to_i
-end
-```
-
-Dasht has one more metric type, an interval type meant for querying external data sources on a regular schedule.
-
-```ruby
-# Query external data. Acts as a gauge, and sets the metric to the
-# return value of the block.
-d.interval :my_metric do
-  sleep 5
-  hash = JSON.parse(Net::HTTP.get("http://website/some/api.json"))
-  hash["value"]
 end
 ```
 
