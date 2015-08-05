@@ -78,10 +78,11 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.0)
   jeweler (~> 2.0.1)
+  rack (~> 1.6)
   rdoc (~> 3.12)
   shoulda
   simplecov
-  test-unit
+  test-unit (~> 3)
 
 BUNDLED WITH
    1.10.5
