@@ -10,6 +10,8 @@ A typical Dasht dashboard takes just a few minutes of coding and is usually less
 
 Dasht is a Ruby / Rack application by [Rusty Klophaus](http://rusty.io), open-sourced under the MIT license.
 
+[![Gem Version](https://badge.fury.io/rb/dasht.svg)](http://badge.fury.io/rb/dasht)
+
 # Getting Started
 
 Let's make the following dashboard for your Heroku app.
