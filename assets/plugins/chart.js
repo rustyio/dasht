@@ -3,6 +3,9 @@ Dasht.chart_init = function(el, options) {
     var chart_el = chart.get()[0];
     var old_data = 0;
 
+
+    // Set the value height to be tile height minus title height.
+    Dasht.fill_tile($(el).find(".title"), true, false);
     Dasht.fill_tile(chart);
 
     // Create some empty values.

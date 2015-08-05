@@ -1,11 +1,11 @@
 .chart-tile .chart {
-    margin: 0px 20px;
+    margin: 20px;
 }
 
 @media (max-width: 640px) {
     .chart-tile .chart {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        font-size: 30px;
+        height: 80px;
+        margin: 12px
+        height: 100px;
     }
 }
