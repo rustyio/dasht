@@ -107,8 +107,10 @@ module Dasht
 
     ### LOG THREADS ###
 
-    def start(command)
-      @log_threads[command] = nil
+    def start(command, &block)
+      log_thread = @log_threads[command] = LogThread.new(self, command)
+      yield(log_thread) if block
+      log_thread
     end
 
     def tail(path)
@@ -119,7 +121,11 @@ module Dasht
 
     def run(&block)
       if @already_running
-        reload(&block)
+        begin
+          reload(&block)
+        rescue => e
+          log e
+        end
         return
       end
 
@@ -129,17 +135,14 @@ module Dasht
 
       block.call(self)
 
-      @log_threads.keys.each do |command|
-        @log_threads[command] = LogThread.new(self, command).run
-      end
-
+      @log_threads.values.map(&:run)
       @rack_app.run(port)
     end
 
     def reload(&block)
       @collector.reset_event_definitions
       @boards = {}
-      @old_log_threads = @log_threads
+      @log_threads.values.map(&:terminate)
       @log_threads = {}
 
       begin
@@ -149,22 +152,7 @@ module Dasht
         raise e
       end
 
-      @log_threads.keys.each do |command|
-        @log_threads[command] = @old_log_threads.delete(command)
-        @log_threads[command] ||= Dash::LogThread.new(command).run
-      end
-
-      @old_log_threads.keys.each do |command|
-        _stop_log_thread(command)
-      end
-    end
-
-    private
-
-    def _stop_log_thread(command)
-      log "Stopping `#{command}`."
-      @log_threads[command].terminate
-      @log_threads.delete(command)
+      @log_threads.values.map(&:run)
     end
   end
 end
