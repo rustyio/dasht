@@ -309,10 +309,10 @@ b.value :my_metric, :title => "My Title",
 
 A bucket of ideas for the future:
 
++ Display a dashboard index if no default dashboard is specified.
 + Fix up 'scroll' tile.
 + Create a 'delta' tile. (Up / down X percent.)
-+ Read data in batches to reduce browser resource usage.
-+ Load user defined plugins.
++ Support user-defined plugins.
 
 # Contributing
 
