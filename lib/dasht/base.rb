@@ -48,7 +48,7 @@ module Dasht
         begin
           while true
             value = block.call
-            set(metric, value, :last) if value
+            metrics.set(metric, value, :last, Time.now.to_i) if value
           end
         rescue => e
           log e
