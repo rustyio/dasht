@@ -1,7 +1,6 @@
-require 'test/unit'
-require 'dasht/metric'
+require 'helper'
 
-class MetricTest < Test::Unit::TestCase
+class TestMetric < Test::Unit::TestCase
   def test_counting
     m = Dasht::Metric.new
     proc = Proc.new do |old_value, new_value|

@@ -1,7 +1,6 @@
-require 'test/unit'
-require 'dasht/list'
+require 'helper'
 
-class ListTest < Test::Unit::TestCase
+class TestList < Test::Unit::TestCase
   def test_construction
     list = Dasht::List.new
     ptr1 = list.append(1)
