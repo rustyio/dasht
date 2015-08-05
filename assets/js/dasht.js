@@ -25,12 +25,6 @@ Dasht.add_tile = function(options) {
 }
 
 Dasht.init = function() {
-    // if ($(document).width() > 640) {
-    //     $('#container').masonry({
-    //         itemSelector: '.tile'
-    //     });
-    // }
-
     Dasht.scale_fontsize_loop();
     Dasht.process_pending_requests_loop();
 }

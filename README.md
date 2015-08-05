@@ -252,7 +252,6 @@ Dasht tries to make dashboards look nice with minimal effort in the following wa
 
 + The dashboard itself gracefully stretches to fill the entire screen for most reasonable monitor sizes, even in portrait orientation.
 + Tile elements are designed to be slightly transparent, so they look nice with any background color or image.
-+ Dasht uses [Masonry](http://masonry.desandro.com/) to pack tiles into a reasonably compact and visually pleasing layout.
 + Text is automatically scaled up or down to be as large as possible while still fitting into available space.
 + Dasht is responsive and looks nice on mobile devices and tables. That said, the target platform is a large monitor.
 
@@ -304,15 +303,6 @@ Here is how other settings are set.
 b.value :my_metric, :title => "My Title",
         :resolution => 10, :refresh => 1, :width => 6, :height => 2
 ```
-
-# Future Plans
-
-A bucket of ideas for the future:
-
-+ Display a dashboard index if no default dashboard is specified.
-+ Fix up 'scroll' tile.
-+ Create a 'delta' tile. (Up / down X percent.)
-+ Support user-defined plugins.
 
 # Contributing
 
