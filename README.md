@@ -29,13 +29,13 @@ dasht do |d|
   # Consume Heroku logs.
   d.start "heroku logs --tail --app #{application}" do |l|
     # Track some metrics.
-    d.count :lines, /.+/
+    l.count :lines, /.+/
 
-    d.count :bytes, /.+/ do |match|
+    l.count :bytes, /.+/ do |match|
       match[0].length
     end
 
-    d.append :visitors, /for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
+    l.append :visitors, /Started GET .* for (\d+\.\d+\.\d+\.\d+) at/ do |matches|
       matches[1]
     end
   end
