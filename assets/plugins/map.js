@@ -25,9 +25,8 @@ Dasht.map_plot_ip = function(map, markers, ip) {
         return;
     }
 
-    // http://freegeoip.net/json/
     jQuery.ajax({
-        url: 'http://104.236.251.84/json/' + ip,
+        url: 'http://freegeoip.net/json/' + ip,
         type: 'POST',
         dataType: 'jsonp',
         success: function(response) {
