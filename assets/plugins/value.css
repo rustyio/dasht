@@ -5,6 +5,8 @@
     font-size: 80px;
     font-weight: bold;
     margin: 20px 20px 0px 20px;
+    display: -webkit-flex;
+    -webkit-align-items: center;
     display: flex;
     align-items: center;
 }
