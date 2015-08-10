@@ -29,13 +29,13 @@ Dasht.init = function() {
     Dasht.process_pending_requests_loop();
 }
 
-Dasht.fill_tile = function(el, do_width = true, do_height = true) {
+Dasht.fill_tile = function(el, do_width, do_height) {
     var parent = $(el).parent();
-    if (do_width) {
+    if (do_width || do_width == undefined) {
     var marginsize = parseInt($(el).css("margin-left")) + parseInt($(el).css("margin-right"));
         $(el).outerWidth(parent.width() - marginsize);
     }
-    if (do_height) {
+    if (do_height || do_height == undefined) {
         var marginsize = parseInt($(el).css("margin-top")) + parseInt($(el).css("margin-bottom"));
         $(el).outerHeight(parent.height() - marginsize);
     }
