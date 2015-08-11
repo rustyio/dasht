@@ -27,6 +27,7 @@ Dasht.add_tile = function(options) {
 Dasht.init = function() {
     Dasht.scale_fontsize_loop();
     Dasht.process_pending_requests_loop();
+    Dasht.watchdog_loop();
 }
 
 Dasht.fill_tile = function(el, do_width, do_height) {
@@ -107,6 +108,7 @@ Dasht.process_pending_requests_loop = function() {
     Dasht.pending_requests = [];
 
     var successFN = function(responses) {
+        Dasht.loaded_data = true;
         $("body").removeClass("waiting");
 
         // Process the responses.
@@ -132,4 +134,18 @@ Dasht.process_pending_requests_loop = function() {
         data: JSON.stringify(queries),
         success: successFN
     });
+}
+
+
+Dasht.loaded_data = true;
+Dasht.watchdog_loop = function() {
+    // The page could get stuck for a variety of reasons. This is the
+    // last resort. Run every 2 minutes. If we haven't loaded new data
+    // in that time, then reload the page.
+    if (Dasht.loaded_data == true) {
+        Dasht.loaded_data = false;
+        setTimeout(Dasht.watchdog_loop, 2 * 60 * 1000);
+    } else {
+        document.location.reload();
+    }
 }
