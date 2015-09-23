@@ -12,11 +12,14 @@ Dasht is a Ruby / Rack application by [Rusty Klophaus](http://rusty.io), open-so
 
 [![Gem Version](https://badge.fury.io/rb/dasht.svg)](http://badge.fury.io/rb/dasht)
 
+![Dasht At FiveStreet](fivestreet_example.jpg)
+*Two Dasht-powered dashboards at FiveStreet HQ*
+
 # Getting Started
 
 Let's make the following dashboard for your Heroku app.
 
-![Dasht Screen Shot](screenshot_1.png)
+![Dasht Screen Shot](screenshot.png)
 
 First, copy the Ruby code below to a file called `my_dashboard.rb`.
 
