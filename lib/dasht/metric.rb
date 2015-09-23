@@ -45,7 +45,7 @@ module Dasht
       pointer = nil
       @checkpoints.trim_while do |s, p|
         pointer = p
-        s < ts
+        (s || 0) < ts
       end
       @data.trim_to(pointer)
       return
@@ -57,8 +57,8 @@ module Dasht
       end_pointer = nil
       prev_p = nil
       @checkpoints.enum.each do |s, p|
-        start_pointer ||= p if start_ts <= s
-        end_pointer   ||= prev_p if end_ts && end_ts <= s
+        start_pointer ||= p if start_ts <= (s || 0)
+        end_pointer   ||= prev_p if end_ts && end_ts <= (s || 0)
         break if start_pointer && (end_ts.nil? || end_pointer)
         prev_p = p
       end
