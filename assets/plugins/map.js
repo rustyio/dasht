@@ -93,7 +93,7 @@ Dasht.map_init = function(el, options) {
     var markers = {};
     var geocoder = new google.maps.Geocoder();
     var ip_regex = /\d+\.\d+\.\d+\.\d+/;
-    var coordinate_regex = /\[(-?\d+\.\d+),\s*(-?\d+\.\d+\)\]/;
+    var coordinate_regex = /\[(-?\d+\.\d+),\s*(-?\d+\.\d+)\]/;
 
     Dasht.fill_tile($(el).find(".map"));
 
