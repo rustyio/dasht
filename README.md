@@ -284,7 +284,7 @@ b.value :my_metric, :title => "My Title"
 
 ### Map Tile
 
-Drop pins on a map corresponding to either a physical addresses ("123 Main Street...") or an IP address ("216.58.217.142"). The metric attached to the map should use the `append` metric type, and the block should return the address string. See `examples/simple_heroku_dashboard.rb` for an example.
+Drop pins on a map corresponding to either a physical addresses ("123 Main Street..."), an IP address ("216.58.217.142"), or coordinates ("[-97.7559964, 30.3071816]", longitude then latitude) . The metric attached to the map should use the `append` metric type, and the block should return the address string. See `examples/simple_heroku_dashboard.rb` for an example.
 
 ```ruby
 b.map :visitors, :title => "Visitors"

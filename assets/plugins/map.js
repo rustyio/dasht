@@ -93,6 +93,7 @@ Dasht.map_init = function(el, options) {
     var markers = {};
     var geocoder = new google.maps.Geocoder();
     var ip_regex = /\d+\.\d+\.\d+\.\d+/;
+    var coordinate_regex = /\[(-?\d+\.\d+),(-?\d+\.\d+\)]/;
 
     Dasht.fill_tile($(el).find(".map"));
 
@@ -113,6 +114,12 @@ Dasht.map_init = function(el, options) {
             _.each(new_data, function(item, index) {
                 if (item.search(ip_regex) >= 0) {
                     Dasht.map_plot_ip(map, markers, item);
+                } else if (item.search(coordinate_regex) >= 0) {
+                    var matches = item.match(coordinate_regex);
+                    var lng = parseFloat(matches[1]);
+                    var lat = parseFloat(matches[2]);
+                    var location = new google.maps.LatLng(lat, lng);
+                    Dasht.map_plot_location(map, markers, item, location);
                 } else {
                     Dasht.map_plot_address(map, markers, geocoder, item);
                 }
