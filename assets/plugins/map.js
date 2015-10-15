@@ -40,7 +40,24 @@ Dasht.map_plot_ip = function(map, markers, ip) {
     });
 }
 
-Dasht.map_plot_location = function(map, markers, address_or_ip, location) {
+Dasht.map_plot_coordinates = function(map, markers, coordinates) {
+    // Maybe pull the location from cache.
+    var location;
+    if (location = Dasht.map_geocoder_cache[coordinates]) {
+        Dasht.map_plot_location(map, markers, coordinates, location);
+        return;
+    }
+
+    var coordinate_regex = /\[(-?\d+\.\d+),\s*(-?\d+\.\d+)\]/;
+    var matches = coordinates.match(coordinate_regex);
+    var lng = parseFloat(matches[1]);
+    var lat = parseFloat(matches[2]);
+    var location = new google.maps.LatLng(lat, lng);
+    Dasht.map_geocoder_cache[coordinates] = location;
+    Dasht.map_plot_location(map, markers, coordinates, location);
+}
+
+Dasht.map_plot_location = function(map, markers, item, location) {
     var location_exists = _.any(_.values(markers), function(marker) {
         return _.isEqual(marker.position, location);
     });
@@ -54,7 +71,7 @@ Dasht.map_plot_location = function(map, markers, address_or_ip, location) {
     });
 
     // Keep track of markers.
-    markers[address_or_ip] = marker;
+    markers[item] = marker;
 }
 
 Dasht.map_init = function(el, options) {
@@ -115,11 +132,7 @@ Dasht.map_init = function(el, options) {
                 if (item.search(ip_regex) >= 0) {
                     Dasht.map_plot_ip(map, markers, item);
                 } else if (item.search(coordinate_regex) >= 0) {
-                    var matches = item.match(coordinate_regex);
-                    var lng = parseFloat(matches[1]);
-                    var lat = parseFloat(matches[2]);
-                    var location = new google.maps.LatLng(lat, lng);
-                    Dasht.map_plot_location(map, markers, item, location);
+                    Dasht.map_plot_coordinates(map, markers, item);
                 } else {
                     Dasht.map_plot_address(map, markers, geocoder, item);
                 }
