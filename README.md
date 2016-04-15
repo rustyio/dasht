@@ -128,7 +128,7 @@ end
 ```
 
 
-## Injesting Data
+## Ingesting Data
 
 Dasht gets data by running a command (or tailing a log file) and listening to the output. A single Dasht instance can listen to multiple sources. If the command ends for some reason, it is automatically restarted.
 
